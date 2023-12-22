@@ -1,4 +1,4 @@
-<!-- templates/botones_template.html -->
+<!-- templates/eliminar_cliente_template.html -->
 
 <!DOCTYPE html>
 <html lang="es">
@@ -8,8 +8,7 @@
             name="viewport"
             content="width=device-width, initial-scale=1, shrink-to-fit=no"
         />
-        <title>Operaciones - Mi Proyecto</title>
-
+        <title>Eliminar Cliente - Mi Punto de Venta</title>
         <!-- Agrega los enlaces a Bootstrap CSS y cualquier otro estilo personalizado aquí -->
         <link
             rel="stylesheet"
@@ -17,21 +16,30 @@
         />
     </head>
     <body>
-        {% include 'navegacion_template.html' %}
+        {% include 'menu_clientes.html' %}
         <div class="container mt-5">
-            <h2>Operaciones</h2>
+            <h2>Eliminar Cliente</h2>
 
-            <!-- Botones para operaciones CRUD -->
-            <div class="btn-group" role="group" aria-label="Operaciones">
-                <a href="{% url 'clientes_crear' %}" class="btn btn-success"
-                    >Crear</a
-                >
-                <a href="{}" class="btn btn-primary">Listar</a>
-                <a href="{}" class="btn btn-warning">Editar</a>
-                <a href="{% url 'clientes_eliminar' %}" class="btn btn-danger"
-                    >Eliminar</a
-                >
-            </div>
+            <!-- Formulario para eliminar cliente por NIT -->
+            <form
+                method="post"
+                action="{% url 'clientes_eliminar' %}"
+                class="mt-3"
+            >
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="nit">NIT del Cliente a Eliminar:</label>
+                    <input
+                        type="text"
+                        name="nit"
+                        class="form-control"
+                        required
+                    />
+                </div>
+                <button type="submit" class="btn btn-danger">
+                    Eliminar Cliente
+                </button>
+            </form>
         </div>
 
         <!-- Agrega los enlaces a Bootstrap JS y cualquier otro script personalizado aquí -->

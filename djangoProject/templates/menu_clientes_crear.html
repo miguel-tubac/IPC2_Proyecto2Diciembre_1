@@ -2,53 +2,88 @@
 
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Clientes - Mi Punto de Venta</title>
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no"
+        />
+        <title>Clientes - Mi Punto de Venta</title>
 
-    <!-- Agrega los enlaces a Bootstrap CSS y cualquier otro estilo personalizado aquí -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-</head>
-<body>
+        <!-- Agrega los enlaces a Bootstrap CSS y cualquier otro estilo personalizado aquí -->
+        <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        />
+    </head>
+    <body>
+        {% include 'menu_clientes.html' %}
+        <div class="container mt-5">
+            <h2>Clientes</h2>
 
-<div class="container mt-5">
-    <h2>Clientes</h2>
+            <!-- Lista de clientes -->
+            <ul class="list-group">
+                {% for cliente in clientes %}
+                <li class="list-group-item">
+                    {{ cliente.nombre }} - {{ cliente.nit }} - {{
+                    cliente.direccion }}
+                    <a
+                        href="{% url 'editar_cliente' cliente.id %}"
+                        class="btn btn-warning btn-sm float-right"
+                        >Editar</a
+                    >
+                    <a
+                        href="{% url 'eliminar_cliente' cliente.id %}"
+                        class="btn btn-danger btn-sm float-right mr-2"
+                        >Eliminar</a
+                    >
+                </li>
+                {% endfor %}
+            </ul>
 
-    <!-- Lista de clientes -->
-    <ul class="list-group">
-        {% for cliente in clientes %}
-            <li class="list-group-item">
-                {{ cliente.nombre }} - {{ cliente.nit }} - {{ cliente.direccion }}
-                <a href="{% url 'editar_cliente' cliente.id %}" class="btn btn-warning btn-sm float-right">Editar</a>
-                <a href="{% url 'eliminar_cliente' cliente.id %}" class="btn btn-danger btn-sm float-right mr-2">Eliminar</a>
-            </li>
-        {% endfor %}
-    </ul>
-
-    <!-- Formulario para crear nuevo cliente -->
-    <form method="post" action="{% url 'crear_cliente' %}" class="mt-3">
-        {% csrf_token %}
-        <div class="form-group">
-            <label for="nombre">Nombre:</label>
-            <input type="text" name="nombre" class="form-control" required>
+            <!-- Formulario para crear nuevo cliente -->
+            <form
+                method="post"
+                action="{% url 'clientes_crear' %}"
+                class="mt-3"
+            >
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="nombre">Nombre:</label>
+                    <input
+                        type="text"
+                        name="nombre"
+                        class="form-control"
+                        required
+                    />
+                </div>
+                <div class="form-group">
+                    <label for="nit">NIT:</label>
+                    <input
+                        type="text"
+                        name="nit"
+                        class="form-control"
+                        required
+                    />
+                </div>
+                <div class="form-group">
+                    <label for="direccion">Dirección:</label>
+                    <input
+                        type="text"
+                        name="direccion"
+                        class="form-control"
+                        required
+                    />
+                </div>
+                <button type="submit" class="btn btn-success">
+                    Crear Cliente
+                </button>
+            </form>
         </div>
-        <div class="form-group">
-            <label for="nit">NIT:</label>
-            <input type="text" name="nit" class="form-control" required>
-        </div>
-        <div class="form-group">
-            <label for="direccion">Dirección:</label>
-            <input type="text" name="direccion" class="form-control" required>
-        </div>
-        <button type="submit" class="btn btn-success">Crear Cliente</button>
-    </form>
-</div>
 
-<!-- Agrega los enlaces a Bootstrap JS y cualquier otro script personalizado aquí -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-</body>
+        <!-- Agrega los enlaces a Bootstrap JS y cualquier otro script personalizado aquí -->
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    </body>
 </html>
