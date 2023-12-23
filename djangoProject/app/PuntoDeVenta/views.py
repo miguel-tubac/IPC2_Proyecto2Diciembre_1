@@ -27,18 +27,14 @@ def clientes(request):
 
 @csrf_exempt
 def clientes_crear(request):
-    # cargamos el html en un template:
-    objetoTemplate = loader.get_template("menu_clientes_crear.html")
-    html = objetoTemplate.render()
+    template_name = "menu_clientes_crear.html"
+    context = {}
+
     if request.method == 'POST':
         nombre = request.POST.get('nombre')
         nit_cliente = request.POST.get('nit')
         direccion = request.POST.get('direccion')
 
-        # Imprimir los datos en la consola
-        print("Nombre:", nombre)
-        print("NIT:", nit_cliente)
-        print("Dirección:", direccion)
         archivo_xml_path = os.path.join(
             settings.BASE_DIR, 'app', 'PuntoDeVenta', 'datos', 'clientes.xml')
         try:
@@ -47,18 +43,30 @@ def clientes_crear(request):
         except FileNotFoundError:
             root = ET.Element('Clientes')
             tree = ET.ElementTree(root)
-        nuevo_elemento = ET.Element('cliente')
-        nuevo_elemento.attrib['nit'] = nit_cliente
-        ET.SubElement(nuevo_elemento, 'nombre').text = nombre
-        ET.SubElement(nuevo_elemento, 'direccion').text = direccion
-        root.append(nuevo_elemento)
-        tree = ET.ElementTree(root)
-        tree_str = ET.tostring(root, encoding='utf-8').decode('utf-8')
-        formatted_xml = minidom_parse_string(tree_str)
 
-        with open(archivo_xml_path, 'wb') as file:
-            file.write(formatted_xml.encode('utf-8'))
-    return HttpResponse(html)
+        # Verificar si el NIT ya existe
+        elemento_existente = root.find(f'.//cliente[@nit="{nit_cliente}"]')
+        if elemento_existente is not None:
+            context['success'] = False
+            context['message'] = 'Error: El cliente con este NIT ya existe.'
+        else:
+            nuevo_elemento = ET.Element('cliente')
+            nuevo_elemento.attrib['nit'] = nit_cliente
+            ET.SubElement(nuevo_elemento, 'nombre').text = nombre
+            ET.SubElement(nuevo_elemento, 'direccion').text = direccion
+            root.append(nuevo_elemento)
+
+            tree = ET.ElementTree(root)
+            tree_str = ET.tostring(root, encoding='utf-8').decode('utf-8')
+            formatted_xml = minidom_parse_string(tree_str)
+
+            with open(archivo_xml_path, 'wb') as file:
+                file.write(formatted_xml.encode('utf-8'))
+
+            context['success'] = True
+            context['message'] = 'Cliente creado exitosamente'
+
+    return render(request, template_name, context)
 
 
 @csrf_exempt

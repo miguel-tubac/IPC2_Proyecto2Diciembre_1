@@ -8,7 +8,7 @@
             name="viewport"
             content="width=device-width, initial-scale=1, shrink-to-fit=no"
         />
-        <title>Ver CLientes</title>
+        <title>Ver Clientes</title>
         <!-- Agrega los enlaces a Bootstrap CSS y cualquier otro estilo personalizado aquí -->
         <link
             rel="stylesheet"
@@ -22,26 +22,26 @@
 
             <!-- Formulario para eliminar cliente por NIT -->
             {% if lst_clientes %}
-                <table border="1">
-                    <thead>
-                        <tr>
-                            <th>NIT</th>
-                            <th>Nombre</th>
-                            <th>Dirección</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for cliente in lst_clientes %}
-                            <tr>
-                                <td>{{ cliente.0 }}</td>
-                                <td>{{ cliente.1 }}</td>
-                                <td>{{ cliente.2 }}</td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+            <table class="table table-bordered table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">NIT</th>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Dirección</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cliente in lst_clientes %}
+                    <tr>
+                        <td>{{ cliente.0 }}</td>
+                        <td>{{ cliente.1 }}</td>
+                        <td>{{ cliente.2 }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
             {% else %}
-                <p>No hay clientes disponibles.</p>
+            <p class="alert alert-info">No hay clientes disponibles.</p>
             {% endif %}
         </div>
 
