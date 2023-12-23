@@ -1,32 +1,73 @@
 <!-- Plantilla para editar_cliente.html -->
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar Cliente</title>
-    <!-- Agrega los enlaces a Bootstrap CSS y cualquier otro estilo personalizado aquí -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-</head>
-<body>
-    <h2>Editar Cliente</h2>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Editar Cliente</title>
+        <!-- Agrega los enlaces a Bootstrap CSS y cualquier otro estilo personalizado aquí -->
+        <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        />
+    </head>
+    <body>
+        {% include 'menu_clientes.html' %}
+        <h2>Editar Cliente</h2>
 
-    <form method="post" action="{% url 'guardar_cambios_cliente' nit=cliente.nit %}">
-        {% csrf_token %}
-        <div class="form-group">
-            <label for="nombre">Nombre:</label>
-            <input type="text" name="nombre" value="{{ cliente.nombre }}" class="form-control" required>
-        </div>
-        <div class="form-group">
-            <label for="direccion">Dirección:</label>
-            <input type="text" name="direccion" value="{{ cliente.direccion }}" class="form-control" required>
-        </div>
-        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-    </form>
+        <form
+            method="post"
+            action="{% url 'guardar_cambios_cliente' nit=cliente.nit %}"
+        >
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="nombre">Nombre:</label>
+                <input
+                    type="text"
+                    name="nombre"
+                    value="{{ cliente.nombre }}"
+                    class="form-control"
+                    required
+                />
+            </div>
+            <div class="form-group">
+                <label for="direccion">Dirección:</label>
+                <input
+                    type="text"
+                    name="direccion"
+                    value="{{ cliente.direccion }}"
+                    class="form-control"
+                    required
+                />
+            </div>
+            <button type="submit" class="btn btn-primary">
+                Guardar Cambios
+            </button>
+        </form>
 
-    <!-- Agrega los enlaces a Bootstrap JS y cualquier otro script personalizado aquí -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
+        <!-- Agrega los enlaces a Bootstrap JS y cualquier otro script personalizado aquí -->
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        {% if success %}
+        <script>
+            Swal.fire({
+                title: 'Cliente Creado',
+                icon: 'success',
+                confirmButtonText: 'OK',
+            });
+        </script>
+        {% elif message %}
+        <script>
+            Swal.fire({
+                title: 'Error',
+                text: '{{ message }}',
+                icon: 'error',
+                confirmButtonText: 'OK',
+            });
+        </script>
+        {% endif %}
+    </body>
 </html>

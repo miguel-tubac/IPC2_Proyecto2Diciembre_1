@@ -15,22 +15,45 @@
             rel="stylesheet"
             href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
         />
+        <style>
+            .btn-group {
+                padding: 15px;
+            }
+        </style>
     </head>
     <body>
         {% include 'navegacion_template.html' %}
         <div class="container mt-5">
-            <h2>Operaciones</h2>
+            <h2>Operaciones Clientes</h2>
 
             <!-- Botones para operaciones CRUD -->
             <div class="btn-group" role="group" aria-label="Operaciones">
-                <a href="{% url 'clientes_crear' %}" class="btn btn-success"
-                    >Crear</a
-                >
-                <a href="{% url 'clientes_listar' %}" class="btn btn-primary">Listar</a>
-                <a href="{% url 'clientes_editar' %}" class="btn btn-warning">Editar</a>
-                <a href="{% url 'clientes_eliminar' %}" class="btn btn-danger"
-                    >Eliminar</a
-                >
+                <div class="btn-group" role="group">
+                    <a href="{% url 'clientes_crear' %}" class="btn btn-success"
+                        >Crear</a
+                    >
+                </div>
+                <div class="btn-group" role="group">
+                    <a
+                        href="{% url 'clientes_listar' %}"
+                        class="btn btn-primary"
+                        >Listar</a
+                    >
+                </div>
+                <div class="btn-group" role="group">
+                    <a
+                        href="{% url 'clientes_editar' %}"
+                        class="btn btn-warning"
+                        >Editar</a
+                    >
+                </div>
+                <div class="btn-group" role="group">
+                    <a
+                        href="{% url 'clientes_eliminar' %}"
+                        class="btn btn-danger"
+                        >Eliminar</a
+                    >
+                </div>
             </div>
         </div>
 

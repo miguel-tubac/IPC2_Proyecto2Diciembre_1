@@ -1,0 +1,67 @@
+<!-- templates/botones_template.html -->
+
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no"
+        />
+        <title>Operaciones - Mi Proyecto</title>
+
+        <!-- Agrega los enlaces a Bootstrap CSS y cualquier otro estilo personalizado aquí -->
+        <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        />
+        <style>
+            .btn-group {
+                padding: 15px;
+            }
+        </style>
+    </head>
+    <body>
+        {% include 'navegacion_template.html' %}
+        <div class="container mt-5">
+            <h2>Operaciones Productos</h2>
+
+            <!-- Botones para operaciones CRUD -->
+            <div class="btn-group" role="group" aria-label="Operaciones">
+                <div class="btn-group" role="group">
+                    <a
+                        href="{% url 'productos_crear' %}"
+                        class="btn btn-success"
+                        >Crear</a
+                    >
+                </div>
+                <div class="btn-group" role="group">
+                    <a
+                        href="{% url 'clientes_listar' %}"
+                        class="btn btn-primary"
+                        >Listar</a
+                    >
+                </div>
+                <div class="btn-group" role="group">
+                    <a
+                        href="{% url 'clientes_editar' %}"
+                        class="btn btn-warning"
+                        >Editar</a
+                    >
+                </div>
+                <div class="btn-group" role="group">
+                    <a
+                        href="{% url 'productos_eliminar' %}"
+                        class="btn btn-danger"
+                        >Eliminar</a
+                    >
+                </div>
+            </div>
+        </div>
+
+        <!-- Agrega los enlaces a Bootstrap JS y cualquier otro script personalizado aquí -->
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    </body>
+</html>

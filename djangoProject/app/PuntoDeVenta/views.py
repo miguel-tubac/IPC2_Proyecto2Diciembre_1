@@ -5,7 +5,6 @@ import xml.etree.ElementTree as ET
 from django.http import HttpResponse
 from django.template import loader
 from django.conf import settings
-
 from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.

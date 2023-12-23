@@ -1,11 +1,10 @@
-<?xml version="1.0" ?>
 <Clientes>
     <cliente nit="33122">
-        <nombre>Adler</nombre>
+        <nombre>Adlers</nombre>
         <direccion>Chimaltenango</direccion>
     </cliente>
     <cliente nit="1313">
-        <nombre>Jose</nombre>
+        <nombre>Nery</nombre>
         <direccion>Guatemala</direccion>
     </cliente>
 </Clientes>
