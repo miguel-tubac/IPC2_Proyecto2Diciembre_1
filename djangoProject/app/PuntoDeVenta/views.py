@@ -62,6 +62,33 @@ def clientes_crear(request):
 
 
 @csrf_exempt
+def clientes_listar(request):
+    # Cargar el template
+    template = loader.get_template("menu_clientes_listar.html")
+
+    lst_clientes = []
+    archivo_xml_path = os.path.join(
+        settings.BASE_DIR, 'app', 'PuntoDeVenta', 'datos', 'clientes.xml')
+
+    try:
+        tree = ET.parse(archivo_xml_path)
+        root = tree.getroot()
+        for cliente in root.findall("cliente"):
+            nit_cliente = cliente.get("nit")
+            nombre_cliente = cliente.find("nombre").text
+            direccion = cliente.find("direccion").text
+            cliente_listar = (nit_cliente, nombre_cliente, direccion)
+            lst_clientes.append(cliente_listar)
+    except FileNotFoundError:
+        root = ET.Element('Clientes')
+        tree = ET.ElementTree(root)
+
+    # Usar render en lugar de HttpResponse para cargar el template y pasar el contexto
+    context = {"lst_clientes": lst_clientes}
+    return render(request, "menu_clientes_listar.html", context)
+
+
+@csrf_exempt
 def clientes_eliminar(request):
     template_name = "menu_clientes_eliminar.html"
     context = {}

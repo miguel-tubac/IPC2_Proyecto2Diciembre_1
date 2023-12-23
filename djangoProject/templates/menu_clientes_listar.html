@@ -1,0 +1,53 @@
+<!-- templates/eliminar_cliente_template.html -->
+
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no"
+        />
+        <title>Ver CLientes</title>
+        <!-- Agrega los enlaces a Bootstrap CSS y cualquier otro estilo personalizado aquí -->
+        <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        />
+    </head>
+    <body>
+        {% include 'menu_clientes.html' %}
+        <div class="container mt-5">
+            <h2>Listar Clientes</h2>
+
+            <!-- Formulario para eliminar cliente por NIT -->
+            {% if lst_clientes %}
+                <table border="1">
+                    <thead>
+                        <tr>
+                            <th>NIT</th>
+                            <th>Nombre</th>
+                            <th>Dirección</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cliente in lst_clientes %}
+                            <tr>
+                                <td>{{ cliente.0 }}</td>
+                                <td>{{ cliente.1 }}</td>
+                                <td>{{ cliente.2 }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No hay clientes disponibles.</p>
+            {% endif %}
+        </div>
+
+        <!-- Agrega los enlaces a Bootstrap JS y cualquier otro script personalizado aquí -->
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    </body>
+</html>
