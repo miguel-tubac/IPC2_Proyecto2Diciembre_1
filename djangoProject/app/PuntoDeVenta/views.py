@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from xml.dom import minidom
 import os
 import xml.etree.ElementTree as ET
@@ -140,3 +140,96 @@ def minidom_parse_string(string):
     cleaned_xml_string = '\n'.join(
         [line for line in xml_string.split('\n') if line.strip()])
     return cleaned_xml_string
+
+
+@csrf_exempt
+def clientes_editar(request):
+    # Cargar el template
+    template = loader.get_template("menu_clientes_editar.html")
+
+    lst_clientes = []
+    archivo_xml_path = os.path.join(
+        settings.BASE_DIR, 'app', 'PuntoDeVenta', 'datos', 'clientes.xml')
+
+    try:
+        tree = ET.parse(archivo_xml_path)
+        root = tree.getroot()
+        for cliente in root.findall("cliente"):
+            nit_cliente = cliente.get("nit")
+            nombre_cliente = cliente.find("nombre").text
+            direccion = cliente.find("direccion").text
+            cliente_listar = (nit_cliente, nombre_cliente, direccion)
+            lst_clientes.append(cliente_listar)
+    except FileNotFoundError:
+        root = ET.Element('Clientes')
+        tree = ET.ElementTree(root)
+
+    # Usar render en lugar de HttpResponse para cargar el template y pasar el contexto
+    context = {"lst_clientes": lst_clientes}
+    return render(request, "menu_clientes_editar.html", context)
+
+
+def obtener_cliente_por_nit(nit):
+    archivo_xml_path = os.path.join(
+        settings.BASE_DIR, 'app', 'PuntoDeVenta', 'datos', 'clientes.xml')
+
+    try:
+        tree = ET.parse(archivo_xml_path)
+        root = tree.getroot()
+    except FileNotFoundError:
+        # Si el archivo no existe, retorna None
+        return None
+
+    # Buscar el elemento con el NIT especificado
+    cliente_element = root.find(f'.//cliente[@nit="{nit}"]')
+
+    if cliente_element is not None:
+        # Obtener los datos del cliente
+        nombre = cliente_element.find('nombre').text
+        direccion = cliente_element.find('direccion').text
+
+        # Crear y retornar un diccionario con los datos del cliente
+        cliente = {'nit': nit, 'nombre': nombre, 'direccion': direccion}
+        return cliente
+    else:
+        # Si no se encuentra el cliente, retorna None
+        return None
+
+
+def editar_cliente(request, nit):
+
+    cliente = obtener_cliente_por_nit(nit)
+
+    if cliente:
+        # Renderizar el formulario de edición del cliente con los datos existentes
+        context = {'cliente': cliente}
+        return render(request, 'editar_cliente.html', context)
+    else:
+        # Manejar el caso en el que el cliente no se encuentra
+        return render(request, 'menu_clientes_crear.html')
+
+
+def guardar_cambios_cliente(request, nit):
+    if request.method == 'POST':
+        # Obtener los datos del formulario y guardar los cambios en el archivo XML
+        nombre = request.POST.get('nombre')
+        direccion = request.POST.get('direccion')
+
+        archivo_xml_path = os.path.join(
+            settings.BASE_DIR, 'app', 'PuntoDeVenta', 'datos', 'clientes.xml')
+
+        tree = ET.parse(archivo_xml_path)
+        root = tree.getroot()
+
+        # Buscar y actualizar el elemento con el NIT especificado
+        for cliente_element in root.findall('.//cliente'):
+            if cliente_element.get('nit') == nit:
+                cliente_element.find('nombre').text = nombre
+                cliente_element.find('direccion').text = direccion
+                break
+
+        # Guardar los cambios en el archivo XML
+        tree.write(archivo_xml_path)
+
+    # Redirigir de nuevo a la página de listado de clientes
+    return redirect('clientes_listar')
