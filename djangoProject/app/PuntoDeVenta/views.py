@@ -63,9 +63,9 @@ def clientes_crear(request):
 
 @csrf_exempt
 def clientes_eliminar(request):
-    # cargamos el html en un template:
-    objetoTemplate = loader.get_template("menu_clientes_eliminar.html")
-    html = objetoTemplate.render()
+    template_name = "menu_clientes_eliminar.html"
+    context = {}
+
     if request.method == 'POST':
         nit_cliente = request.POST.get('nit')
         archivo_xml_path = os.path.join(
@@ -76,16 +76,25 @@ def clientes_eliminar(request):
         except FileNotFoundError:
             root = ET.Element('Clientes')
             tree = ET.ElementTree(root)
+
         elemento_a_eliminar = root.find(f'.//cliente[@nit="{nit_cliente}"]')
+
         if elemento_a_eliminar is not None:
             root.remove(elemento_a_eliminar)
-        tree = ET.ElementTree(root)
-        tree_str = ET.tostring(root, encoding='utf-8').decode('utf-8')
-        formatted_xml = minidom_parse_string(tree_str)
+            tree = ET.ElementTree(root)
+            tree_str = ET.tostring(root, encoding='utf-8').decode('utf-8')
+            formatted_xml = minidom_parse_string(tree_str)
 
-        with open(archivo_xml_path, 'wb') as file:
-            file.write(formatted_xml.encode('utf-8'))
-    return HttpResponse(html)
+            with open(archivo_xml_path, 'wb') as file:
+                file.write(formatted_xml.encode('utf-8'))
+
+            context['success'] = True
+            context['message'] = 'Cliente eliminado exitosamente'
+        else:
+            context['success'] = False
+            context['message'] = 'Cliente no encontrado'
+
+    return render(request, template_name, context)
 
 
 def minidom_parse_string(string):
