@@ -1,8 +1,7 @@
-<?xml version="1.0" ?>
 <Clientes>
     <cliente nit="33122">
         <nombre>Adler</nombre>
-        <direccion>Chimal</direccion>
+        <direccion>Chimaltenango</direccion>
     </cliente>
     <cliente nit="funciono">
         <nombre>Jajaja</nombre>
