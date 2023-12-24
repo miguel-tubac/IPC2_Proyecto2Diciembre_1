@@ -100,6 +100,34 @@ def productos_eliminar(request):
 
     return render(request, template_name, context)
 
+@csrf_exempt
+def productos_listar(request):
+    # Cargar el template
+    template = loader.get_template("productos/menu_productos_listar.html")
+
+    lst_productos = []
+    archivo_xml_path = os.path.join(
+        settings.BASE_DIR, 'app', 'Producto', 'datos', 'productos.xml')
+
+    try:
+        tree = ET.parse(archivo_xml_path)
+        root = tree.getroot()
+        for producto in root.findall("producto"):
+            id = producto.get("id")
+            nombre = producto.find("nombre").text
+            descripcion = producto.find("descripcion").text
+            precio = producto.find("precio").text
+            stock = producto.find("stock").text            
+            producto_listar = (id, nombre,descripcion, precio, stock)
+            lst_productos.append(producto_listar)
+    except FileNotFoundError:
+        root = ET.Element('Clientes')
+        tree = ET.ElementTree(root)
+
+    # Usar render en lugar de HttpResponse para cargar el template y pasar el contexto
+    context = {"lst_productos": lst_productos}
+    return render(request, "productos/menu_productos_listar.html", context)
+
 
 def minidom_parse_string(string):
     """Evita la adición de espacios innecesarios por minidom."""

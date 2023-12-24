@@ -6,4 +6,10 @@
         <precio>1200000</precio>
         <stock>2</stock>
     </producto>
+    <producto id="02">
+        <nombre>Camo</nombre>
+        <descripcion>Larmborgini</descripcion>
+        <precio>1200000</precio>
+        <stock>2</stock>
+    </producto>
 </Productos>
