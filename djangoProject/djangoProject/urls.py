@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from app.PuntoDeVenta.views import incio, clientes, clientes_crear, clientes_eliminar, clientes_listar, clientes_editar, editar_cliente, guardar_cambios_cliente
-from app.Producto.views import productos, productos_crear, productos_eliminar, productos_listar
+from app.Producto.views import productos, productos_crear, productos_eliminar, productos_listar, productos_editar, editar_producto, guardar_cambios_producto
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -34,5 +34,8 @@ urlpatterns = [
     path('productos/', productos, name='productos'),
     path('productos/crear', productos_crear, name='productos_crear'),
     path('productos/eliminar', productos_eliminar, name='productos_eliminar'),
-    path('productos/listar', productos_listar, name='productos_listar')
+    path('productos/listar', productos_listar, name='productos_listar'),
+    path('productos/editar_producto/', productos_editar, name='productos_editar'),
+    path('productos/editar_producto/<str:producto_id>/', editar_producto, name='editar_producto'),
+    path('guardar_cambios_producto/<str:producto_id>/', guardar_cambios_producto, name='guardar_cambios_producto')
 ]

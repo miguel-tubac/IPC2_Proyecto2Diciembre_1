@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no"
+        />
+        <title>Ver Productos</title>
+        <!-- Agrega los enlaces a Bootstrap CSS y cualquier otro estilo personalizado aquí -->
+        <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        />
+    </head>
+    <body>
+        {% include 'productos/menu_productos.html' %}
+        <div class="container mt-5">
+            <h2>Lista Productos</h2>
+
+            <!-- Formulario para editar producto por ID -->
+            {% if lst_productos %}
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Descripción</th>
+                            <th>Precio</th>
+                            <th>Stock</th>
+                            <th>Editar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for producto in lst_productos %}
+                            <tr>
+                                <td>{{ producto.0 }}</td>
+                                <td>{{ producto.1 }}</td>
+                                <td>{{ producto.2 }}</td>
+                                <td>{{ producto.3 }}</td>
+                                <td>{{ producto.4 }}</td>
+                                <td>
+                                    <a href="{% url 'editar_producto' producto_id=producto.0 %}" class="btn btn-secondary">Editar</a>
+                                </td>                                
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No hay productos disponibles.</p>
+            {% endif %}
+        </div>
+
+        <!-- Agrega los enlaces a Bootstrap JS y cualquier otro script personalizado aquí -->
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    </body>
+</html>

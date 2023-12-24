@@ -137,3 +137,108 @@ def minidom_parse_string(string):
     cleaned_xml_string = '\n'.join(
         [line for line in xml_string.split('\n') if line.strip()])
     return cleaned_xml_string
+
+
+@csrf_exempt
+def productos_editar(request):
+    # Cargar el template
+    template = loader.get_template("productos/menu_productos_editar.html")
+
+    lst_productos = []
+    archivo_xml_path = os.path.join(
+        settings.BASE_DIR, 'app', 'Producto', 'datos', 'productos.xml')
+
+    try:
+        tree = ET.parse(archivo_xml_path)
+        root = tree.getroot()
+        for producto in root.findall("producto"):
+            id_producto = producto.get("id")
+            nombre_producto = producto.find("nombre").text
+            descripcion = producto.find("descripcion").text
+            precio = producto.find("precio").text
+            stock = producto.find("stock").text
+            producto_listar = (id_producto, nombre_producto, descripcion, precio, stock)
+            lst_productos.append(producto_listar)
+    except FileNotFoundError:
+        root = ET.Element('Productos')
+        tree = ET.ElementTree(root)
+
+    # Usar render en lugar de HttpResponse para cargar el template y pasar el contexto
+    context = {"lst_productos": lst_productos}
+    return render(request, "productos/menu_productos_editar.html", context)
+
+
+def obtener_producto_por_id(producto_id):
+    
+    archivo_xml_path = os.path.join(
+        settings.BASE_DIR, 'app', 'Producto', 'datos', 'productos.xml')
+
+    try:
+        tree = ET.parse(archivo_xml_path)
+        root = tree.getroot()
+    except FileNotFoundError:
+        # Si el archivo no existe, retorna None
+        return None
+
+    # Buscar el elemento con el ID especificado
+    producto_element = root.find(f'.//producto[@id="{producto_id}"]')
+    print("product", producto_element)
+
+    if producto_element is not None:
+        # Obtener los datos del producto
+        nombre = producto_element.find('nombre').text
+        descripcion = producto_element.find('descripcion').text
+        precio = producto_element.find('precio').text
+        stock = producto_element.find('stock').text
+
+        # Crear y retornar un diccionario con los datos del producto
+        producto = {'id': producto_id, 'nombre': nombre, 'descripcion': descripcion, 'precio': precio, 'stock': stock}
+        return producto
+    else:
+        # Si no se encuentra el producto, retorna None
+        return None
+
+
+def editar_producto(request, producto_id):
+
+    producto = obtener_producto_por_id(producto_id)
+
+    if producto:
+        # Renderizar el formulario de edición del producto con los datos existentes
+        context = {'producto': producto}
+        return render(request, 'productos/editar_producto.html', context)
+    else:
+        # Manejar el caso en el que el producto no se encuentra
+        return render(request, 'productos/menu_productos_crear.html')
+
+
+def guardar_cambios_producto(request, producto_id):
+    
+    if request.method == 'POST':
+        # Obtener los datos del formulario y guardar los cambios en el archivo XML
+        nombre = request.POST.get('nombre')
+        descripcion = request.POST.get('descripcion')
+        precio = request.POST.get('precio')
+        stock = request.POST.get('stock')
+
+        archivo_xml_path = os.path.join(
+            settings.BASE_DIR, 'app', 'Producto', 'datos', 'productos.xml')
+
+        tree = ET.parse(archivo_xml_path)
+        root = tree.getroot()
+
+        # Buscar y actualizar el elemento con el ID especificado
+        for producto_element in root.findall('.//producto'):
+            if producto_element.get('id') == producto_id:
+                
+                producto_element.find('nombre').text = nombre
+                producto_element.find('descripcion').text = descripcion
+                producto_element.find('precio').text = precio
+                producto_element.find('stock').text = stock
+                break
+
+        # Guardar los cambios en el archivo XML
+        tree.write(archivo_xml_path)
+
+    # Redirigir de nuevo a la página de listado de productos
+    return redirect('productos_listar')
