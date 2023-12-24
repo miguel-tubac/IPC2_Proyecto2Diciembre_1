@@ -27,6 +27,7 @@
                     name="nombre"
                     value="{{ cliente.nombre }}"
                     class="form-control"
+                    oninput="this.value = this.value.replace(/[^A-Za-záéíóúÁÉÍÓÚñÑ\s]/g, '')"
                     required
                 />
             </div>
