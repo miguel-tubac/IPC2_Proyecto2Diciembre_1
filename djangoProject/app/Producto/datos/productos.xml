@@ -1,15 +1,10 @@
+<?xml version="1.0" ?>
 <Productos>
-    <producto id="01">
-        <nombre>Carro</nombre>
-        <descripcion>Larmborgini</descripcion>
-        <precio>1200000</precio>
-        <stock>255</stock>
-    </producto>
     <producto id="02">
         <nombre>Camo</nombre>
         <descripcion>Larmborgini</descripcion>
         <precio>1200000</precio>
-        <stock>2</stock>
+        <stock>22</stock>
     </producto>
     <producto id="1698">
         <nombre>Moto</nombre>
