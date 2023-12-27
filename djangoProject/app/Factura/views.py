@@ -52,13 +52,72 @@ def facturas_crear(request):
 def procesar_pedido(request):
     if request.method == 'POST':
         datos_tabla = json.loads(request.body.decode('utf-8'))
-        # Realizar operaciones con los datos, por ejemplo, imprimir en la consola
         print('Datos de la tabla:', datos_tabla)
+        context = {}
 
-        # Puedes realizar más operaciones aquí según tus necesidades
+        # Obtener datos generales
+        nombre = datos_tabla['nombre']
+        nit_cliente = datos_tabla['nit']
+        direccion = datos_tabla['direccion']
+        fecha = datos_tabla['fecha']
+        array_productos = datos_tabla['array']
 
-        # Devolver una respuesta JSON, por ejemplo, un mensaje de éxito
-        return JsonResponse({'mensaje': 'Pedido procesado exitosamente'})
+        archivo_xml_path = os.path.join(
+            settings.BASE_DIR, 'app', 'Factura', 'datos', 'facturas.xml')
+
+        try:
+            tree = ET.parse(archivo_xml_path)
+            root = tree.getroot()
+        except FileNotFoundError:
+            root = ET.Element('Facturas')
+            tree = ET.ElementTree(root)
+
+        # Crear el elemento factura con correlativo
+        correlativo = str(len(root.findall('.//factura')) + 1).zfill(2)
+        nueva_factura = ET.Element('factura', correlativo=correlativo)
+
+        # Crear el elemento cliente
+        nuevo_cliente = ET.Element('cliente', nit=nit_cliente)
+        ET.SubElement(nuevo_cliente, 'nombre').text = nombre
+        ET.SubElement(nuevo_cliente, 'direccion').text = direccion
+        nueva_factura.append(nuevo_cliente)
+
+        # Crear el elemento fecha
+        ET.SubElement(nueva_factura, 'fecha').text = fecha
+
+        # Crear elementos de productos
+    total_factura = 0
+    for producto_data in array_productos:
+        nuevo_producto = ET.Element('producto', id=producto_data[0])
+        ET.SubElement(nuevo_producto, 'nombre').text = producto_data[1]
+        ET.SubElement(nuevo_producto, 'descripcion').text = producto_data[2]
+        ET.SubElement(nuevo_producto, 'cantidad').text = producto_data[3]
+        ET.SubElement(nuevo_producto, 'stock').text = producto_data[4]
+        ET.SubElement(nuevo_producto, 'preciounitario').text = producto_data[5]
+        ET.SubElement(nuevo_producto, 'total').text = producto_data[6]
+        nueva_factura.append(nuevo_producto)
+
+        # Sumar el total del producto al total de la factura
+        total_factura += float(producto_data[6])
+
+        # Crear el elemento totalfactura y asignarle el total calculado
+        ET.SubElement(nueva_factura, 'totalfactura').text = "{:.2f}".format(
+            total_factura)
+
+        root.append(nueva_factura)
+
+        # Guardar el árbol XML de nuevo
+        tree = ET.ElementTree(root)
+        tree_str = ET.tostring(root, encoding='utf-8').decode('utf-8')
+        formatted_xml = minidom_parse_string(tree_str)
+
+        with open(archivo_xml_path, 'wb') as file:
+            file.write(formatted_xml.encode('utf-8'))
+
+        context['success'] = True
+        context['message'] = 'Factura creada exitosamente'
+
+        return JsonResponse(context)
     else:
         return JsonResponse({'error': 'Método no permitido'})
 

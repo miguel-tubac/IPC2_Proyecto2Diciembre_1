@@ -62,7 +62,7 @@
 
             <div class="fecha-section form-group">
                 <label for="fecha">Fecha:</label>
-                <input type="date" id="fecha" class="form-control" />
+                <input type="date" id="fecha" class="form-control" required />
             </div>
 
             <form id="productoForm">
@@ -177,7 +177,13 @@
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <!-- Agrega tu script personalizado para manejar las funciones de búsqueda y procesar pedido -->
         <script>
-            var datosTabla = [];
+            var datosTabla = {
+                nit: '',
+                nombre: '',
+                direccion: '',
+                fecha: '',
+                array: [], // Inicializa array como un arreglo vacío
+            };
             document
                 .getElementById('buscarCliente')
                 .addEventListener('click', function () {
@@ -262,8 +268,18 @@
                 .addEventListener('click', function () {
                     var id_producto =
                         document.getElementById('idProducto').value;
+                    var nit_cliente =
+                        document.getElementById('codigoCliente').value;
+                    var nombre_cliente =
+                        document.getElementById('nombreCliente').value;
+                    var direccion_cliente =
+                        document.getElementById('direccionCliente').value;
+                    var fecha = document.getElementById('fecha').value;
+                    datosTabla['nit'] = nit_cliente;
+                    datosTabla['nombre'] = nombre_cliente;
+                    datosTabla['direccion'] = direccion_cliente;
+                    datosTabla['fecha'] = fecha;
                     const xmlFilePathProducto = "{% static 'productos.xml' %}";
-                    console.log('Funciona');
                     fetch(xmlFilePathProducto)
                         .then((response) => response.text())
                         .then((xmlText) => {
@@ -343,7 +359,8 @@
                                     parseFloat(cantidad_producto) *
                                     parseFloat(precioproducto);
                                 total = total.toFixed(2);
-                                filatabla = [
+                                nuevaFilatabla = [
+                                    id_producto,
                                     nombreproducto,
                                     descripcionproducto,
                                     cantidad_producto,
@@ -351,7 +368,7 @@
                                     precioproducto,
                                     total,
                                 ];
-                                datosTabla.push(filatabla);
+                                datosTabla.array.push(nuevaFilatabla);
                                 var datosTablaString =
                                     JSON.stringify(datosTabla);
                                 sessionStorage.setItem(
@@ -366,6 +383,11 @@
                                     title: 'Producto Agregado al Carrito',
                                     text: `Producto: ${nombreproducto}\nPrecio: ${precioproducto}`,
                                 });
+                                document.getElementById(
+                                    'cantidadProducto'
+                                ).value = '';
+                                document.getElementById('idProducto').value =
+                                    '';
                             } else {
                                 // Manejar el caso en el que no se encontró el producto
                                 Swal.fire({
@@ -382,40 +404,6 @@
                             );
                         });
                 });
-            function obtenerDatosDeLaTabla() {
-                document.getElementById('procesarPedido');
-                // Obtener la tabla por su ID
-                const tablaCarrito = document.getElementById('tablaCarrito');
-
-                // Crear una matriz para almacenar los datos de la tabla
-                const datosTabla = [];
-
-                // Iterar sobre las filas de la tabla
-                for (let i = 1; i < tablaCarrito.rows.length; i++) {
-                    const fila = tablaCarrito.rows[i];
-                    const id = fila.cells[0].textContent;
-                    const nombre = fila.cells[1].textContent;
-                    const descripcion = fila.cells[2].textContent;
-                    const cantidad = fila.cells[3].textContent;
-                    const precio = fila.cells[4].textContent;
-                    const stock = fila.cells[5].textContent;
-                    const total = fila.cells[6].textContent;
-
-                    // Crear un objeto con los datos de la fila
-                    const datosFila = {
-                        id: id,
-                        nombre: nombre,
-                        descripcion: descripcion,
-                        cantidad: cantidad,
-                        precio: precio,
-                        stock: stock,
-                        total: total,
-                    };
-
-                    // Agregar el objeto a la matriz
-                    datosTabla.push(datosFila);
-                }
-            }
             document
                 .getElementById('procesarPedido')
                 .addEventListener('click', function () {
@@ -437,9 +425,18 @@
                             console.log('Respuesta del servidor:', data);
                             // Redirigir a la página de facturas
                             window.location.href = '/facturas/';
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Factura Creada',
+                                text: `Factura Creada Exitosamente`,
+                            });
                         })
                         .catch((error) =>
-                            console.error('Error en la solicitud:', error)
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Factura No Creada',
+                                text: `No Se Creo La Factura`,
+                            })
                         );
                 });
             function getCookie(name) {

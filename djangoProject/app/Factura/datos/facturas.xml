@@ -1,0 +1,67 @@
+<?xml version="1.0" ?>
+<Facturas>
+    <factura correlativo="01">
+        <cliente nit="1313">
+            <nombre>Nery</nombre>
+            <direccion>Guatemala</direccion>
+        </cliente>
+        <fecha>2023-12-27</fecha>
+        <producto id="02">
+            <nombre>Camo</nombre>
+            <descripcion>Larmborgini</descripcion>
+            <cantidad>5</cantidad>
+            <stock>22</stock>
+            <preciounitario>1200000</preciounitario>
+            <total>6000000.00</total>
+        </producto>
+        <totalfactura>6000000.00</totalfactura>
+    </factura>
+    <factura correlativo="02">
+        <cliente nit="33122">
+            <nombre>Adlers</nombre>
+            <direccion>Chimaltenango</direccion>
+        </cliente>
+        <fecha>2023-12-27</fecha>
+        <producto id="02">
+            <nombre>Camo</nombre>
+            <descripcion>Larmborgini</descripcion>
+            <cantidad>1</cantidad>
+            <stock>22</stock>
+            <preciounitario>1200000</preciounitario>
+            <total>1200000.00</total>
+        </producto>
+        <totalfactura>1200000.00</totalfactura>
+    </factura>
+    <factura correlativo="03">
+        <cliente nit="1313">
+            <nombre>Nery</nombre>
+            <direccion>Guatemala</direccion>
+        </cliente>
+        <fecha>2023-12-27</fecha>
+        <producto id="02">
+            <nombre>Camo</nombre>
+            <descripcion>Larmborgini</descripcion>
+            <cantidad>1</cantidad>
+            <stock>22</stock>
+            <preciounitario>1200000</preciounitario>
+            <total>1200000.00</total>
+        </producto>
+        <totalfactura>1200000.00</totalfactura>
+    </factura>
+    <factura correlativo="04">
+        <cliente nit="1313">
+            <nombre>Nery</nombre>
+            <direccion>Guatemala</direccion>
+        </cliente>
+        <fecha>2023-12-28</fecha>
+        <producto id="02">
+            <nombre>Camo</nombre>
+            <descripcion>Larmborgini</descripcion>
+            <cantidad>5</cantidad>
+            <stock>22</stock>
+            <preciounitario>1200000</preciounitario>
+            <total>6000000.00</total>
+        </producto>
+        <totalfactura>6000000.00</totalfactura>
+    </factura>
+</Facturas>
