@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path
 from app.PuntoDeVenta.views import incio, clientes, clientes_crear, clientes_eliminar, clientes_listar, clientes_editar, editar_cliente, guardar_cambios_cliente
 from app.Producto.views import productos, productos_crear, productos_eliminar, productos_listar, productos_editar, editar_producto, guardar_cambios_producto
-from app.Factura.views import facturas, facturas_crear, procesar_pedido
+from app.Factura.views import facturas, facturas_crear, procesar_pedido, eliminar_factura
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -44,4 +44,6 @@ urlpatterns = [
     path('facturas/', facturas, name='facturas'),
     path('facturas/crear', facturas_crear, name='facturas_crear'),
     path('procesar_pedido/', procesar_pedido, name='procesar_pedido'),
+    path('facturas/eliminar/', eliminar_factura, name='eliminar_factura'),
+
 ]

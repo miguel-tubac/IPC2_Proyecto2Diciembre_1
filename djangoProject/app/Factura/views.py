@@ -18,7 +18,6 @@ def facturas(request):
     html = objetoTemplate.render()
     return HttpResponse(html)
 
-
 @csrf_exempt
 def facturas_crear(request):
     template_name = "facturas/menu_facturas_crear.html"
@@ -130,3 +129,40 @@ def minidom_parse_string(string):
     cleaned_xml_string = '\n'.join(
         [line for line in xml_string.split('\n') if line.strip()])
     return cleaned_xml_string
+
+
+@csrf_exempt
+def eliminar_factura(request):
+    template_name = "facturas/menu_facturas_eliminar.html"
+    context = {}
+
+    if request.method == 'POST':
+        correlativo = request.POST.get('id')
+        archivo_xml_path = os.path.join(
+            settings.BASE_DIR, 'app', 'Factura', 'datos', 'facturas.xml')
+        print(correlativo)
+        try:
+            tree = ET.parse(archivo_xml_path)
+            root = tree.getroot()
+        except FileNotFoundError:
+            root = ET.Element('Facturas')
+            tree = ET.ElementTree(root)
+
+        elemento_a_eliminar = root.find(f'.//factura[@correlativo="{correlativo}"]')
+        print(elemento_a_eliminar)
+        if elemento_a_eliminar is not None:
+            root.remove(elemento_a_eliminar)
+            tree = ET.ElementTree(root)
+            tree_str = ET.tostring(root, encoding='utf-8').decode('utf-8')
+            formatted_xml = minidom_parse_string(tree_str)
+
+            with open(archivo_xml_path, 'wb') as file:
+                file.write(formatted_xml.encode('utf-8'))
+
+            context['success'] = True
+            context['message'] = 'Factura eliminada exitosamente'
+        else:
+            context['success'] = False
+            context['message'] = 'Factura no encontrada'
+
+    return render(request, template_name, context)
