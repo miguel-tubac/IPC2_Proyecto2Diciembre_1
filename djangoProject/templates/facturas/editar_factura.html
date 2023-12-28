@@ -6,68 +6,57 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Editar Factura</title>
     <!-- Agrega los enlaces a Bootstrap CSS y cualquier otro estilo personalizado aquí -->
-    <link
-        rel="stylesheet"
-        href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-    />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
 </head>
 <body>
     {% include 'facturas/menu_facturas.html' %}
-    <h2>Editar Factura</h2>
+    <div class="container mt-4">
+        <h2 class="mb-4">Editar Factura</h2>
 
-    <form
-        method="post"
-        action="{% url 'guardar_cambios_factura' correlativo=factura.correlativo %}"
-    >
-        {% csrf_token %}
-        <div class="form-group">
-            <label for="nit_cliente">NIT Cliente:</label>
-            <select name="nit_cliente" class="form-control" required>
-                {% for cliente in clientes %}
-                    <option value="{{ cliente.nit }}" {% if cliente.nit == factura.nit_cliente %}selected{% endif %}>
-                        {{ cliente.nit }} - {{ cliente.nombre }}
-                    </option>
-                {% endfor %}
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="fecha">Fecha:</label>
-            <input
-                type="date"
-                name="fecha"
-                value="{{ factura.fecha }}"
-                class="form-control"
-                required
-            />
-        </div>
-        <hr>
-        <h4>Productos:</h4>
-        <!-- Añade aquí el código para iterar sobre los productos de la factura -->
-        {% for producto in factura.productos %}
+        <form method="post" action="{% url 'guardar_cambios_factura' correlativo=factura.correlativo %}" class="mb-4 bg-info p-4"> <!-- Añade la clase bg-info y p-4 para el color celeste pálido y el espaciado -->
+            {% csrf_token %}
             <div class="form-group">
-                <label for="productos">Producto {{ forloop.counter }}:</label>
-                <!-- Mostrar todos los datos del producto -->
-                <p><strong>ID:</strong> {{ producto.id }}</p>
-                <p><strong>Nombre:</strong> {{ producto.nombre }}</p>
-                <p><strong>Descripción:</strong> {{ producto.descripcion }}</p>
-                <p><strong>Cantidad:</strong> {{ producto.cantidad }}</p>
-                <p><strong>Stock:</strong> {{ producto.stock }}</p>
-                <p><strong>Precio Unitario:</strong> {{ producto.precio_unitario }}</p>
-                <!-- Calcular el total como la multiplicación de la cantidad por el precio unitario -->
-                <p><strong>Total:</strong> {{ producto.total|floatformat:2 }} </p>
-                <!-- Permitir la modificación únicamente de la cantidad -->
-                <label for="nueva_cantidad">Nueva Cantidad:</label>
-                <input type="number" name="nueva_cantidad_{{ producto.id }}" value="{{ producto.cantidad }}" class="form-control" required>
+                <label for="nit_cliente">NIT Cliente:</label>
+                <select name="nit_cliente" class="form-control" required>
+                    {% for cliente in clientes %}
+                        <option value="{{ cliente.nit }}" {% if cliente.nit == factura.nit_cliente %}selected{% endif %}>
+                            {{ cliente.nit }} - <span class="text-info">{{ cliente.nombre }}</span>
+                        </option>
+                    {% endfor %}
+                </select>
             </div>
-        {% endfor %}
+            <div class="form-group">
+                <label for="fecha">Fecha:</label>
+                <input type="date" name="fecha" value="{{ factura.fecha }}" class="form-control" required />
+            </div>
+            <hr>
+            <h4>Productos:</h4>
+            <!-- Añade aquí el código para iterar sobre los productos de la factura -->
+            {% for producto in factura.productos %}
+                <div class="card mb-3 bg-white"> <!-- Añade la clase bg-white para el fondo blanco -->
+                    <div class="card-body">
+                        <h5 class="card-title">Producto {{ forloop.counter }}</h5>
+                        <!-- Mostrar todos los datos del producto -->
+                        <p class="card-text"><strong>ID:</strong> {{ producto.id }}</p>
+                        <p class="card-text"><strong>Nombre:</strong> {{ producto.nombre }}</p>
+                        <p class="card-text"><strong>Descripción:</strong> {{ producto.descripcion }}</p>
+                        <p class="card-text"><strong>Cantidad:</strong> {{ producto.cantidad }}</p>
+                        <p class="card-text"><strong>Stock:</strong> {{ producto.stock }}</p>
+                        <p class="card-text"><strong>Precio Unitario:</strong> {{ producto.precio_unitario }}</p>
+                        <!-- Calcular el total como la multiplicación de la cantidad por el precio unitario -->
+                        <p class="card-text"><strong>Total:</strong> {{ producto.total|floatformat:2 }} </p>
+                        <!-- Permitir la modificación únicamente de la cantidad -->
+                        <label for="nueva_cantidad">Nueva Cantidad:</label>
+                        <input type="number" name="nueva_cantidad_{{ producto.id }}" value="{{ producto.cantidad }}" class="form-control" required>
+                    </div>
+                </div>
+            {% endfor %}
 
-        <!-- Mostrar el total de la factura fuera del bucle de productos -->
-        <p><strong>Total Factura:</strong> {{ factura.totalfactura|floatformat:2 }} </p>
-
-        <button type="submit" class="btn btn-primary">
-            Guardar Cambios
-        </button>
-    </form>
+            <button type="submit" class="btn btn-primary">
+                Guardar Cambios
+            </button>
+        </form>
+    </div>
 
     <!-- Agrega los enlaces a Bootstrap JS y cualquier otro script personalizado aquí -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
