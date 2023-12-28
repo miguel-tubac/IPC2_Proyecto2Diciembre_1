@@ -2,72 +2,88 @@
 
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <title>Ver Facturas</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
-</head>
-<body>
-    {% include 'facturas/menu_facturas.html' %}
-    <div class="container mt-5">
-        <h2>Lista de Facturas</h2>
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no"
+        />
+        <title>Ver Facturas</title>
+        <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        />
+    </head>
+    <body>
+        {% include 'facturas/menu_facturas.html' %}
+        <div class="container mt-5">
+            <h2>Lista de Facturas</h2>
 
-        {% if lst_facturas %}
-            {% for factura in lst_facturas %}
-                <div class="card mt-3">
-                    <div class="card-header">
-                        <h5>Factura #{{ factura.numero }}</h5>
-                    </div>
-                    <div class="card-body">
-                        <p><strong>Fecha:</strong> {{ factura.fecha }}</p>
-                        <p><strong>Cliente NIT:</strong> {{ factura.cliente_nit }}</p>
-                        <p><strong>Cliente Nombre:</strong> {{ factura.cliente_nombre }}</p>
-                        <p><strong>Cliente Dirección:</strong> {{ factura.cliente_direccion }}</p>
-
-                        {% if factura.lst_productos %}
-                            <table class="table table-bordered mt-3">
-                                <thead class="thead-light">
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Nombre</th>
-                                        <th>Descripción</th>
-                                        <th>Cantidad</th>
-                                        <th>Stock</th>
-                                        <th>Precio Unitario</th>
-                                        <th>Total</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for producto in factura.lst_productos %}
-                                        <tr>
-                                            <td>{{ producto.id }}</td>
-                                            <td>{{ producto.nombre }}</td>
-                                            <td>{{ producto.descripcion }}</td>
-                                            <td>{{ producto.cantidad }}</td>
-                                            <td>{{ producto.stock }}</td>
-                                            <td>{{ producto.precio_unitario }}</td>
-                                            <td>{{ producto.total }}</td>
-                                        </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        {% else %}
-                            <p class="alert alert-info">No hay productos asociados a esta factura.</p>
-                        {% endif %}
-
-                        <p class="mt-3"><strong>Total Factura:</strong> {{ factura.total_factura }}</p>
-                    </div>
+            {% if lst_facturas %} {% for factura in lst_facturas %}
+            <div class="card mt-3">
+                <div class="card-header" , style="background-color: #0e0535">
+                    <h5 style="color: white">Factura #{{ factura.numero }}</h5>
                 </div>
-            {% endfor %}
-        {% else %}
+                <div class="card-body">
+                    <p><strong>Fecha:</strong> {{ factura.fecha }}</p>
+                    <p>
+                        <strong>Cliente NIT:</strong> {{ factura.cliente_nit }}
+                    </p>
+                    <p>
+                        <strong>Cliente Nombre:</strong>
+                        {{factura.cliente_nombre }}
+                    </p>
+                    <p>
+                        <strong>Cliente Dirección:</strong>
+                        {{factura.cliente_direccion }}
+                    </p>
+
+                    {% if factura.lst_productos %}
+                    <table class="table table-bordered mt-3">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Descripción</th>
+                                <th>Cantidad</th>
+                                <th>Stock</th>
+                                <th>Precio Unitario</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for producto in factura.lst_productos %}
+                            <tr>
+                                <td>{{ producto.id }}</td>
+                                <td>{{ producto.nombre }}</td>
+                                <td>{{ producto.descripcion }}</td>
+                                <td>{{ producto.cantidad }}</td>
+                                <td>{{ producto.stock }}</td>
+                                <td>{{ producto.precio_unitario }}</td>
+                                <td>{{ producto.total }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% else %}
+                    <p class="alert alert-info">
+                        No hay productos asociados a esta factura.
+                    </p>
+                    {% endif %}
+
+                    <p class="mt-3">
+                        <strong>Total Factura:</strong>
+                        {{factura.total_factura}}
+                    </p>
+                </div>
+            </div>
+            {% endfor %} {% else %}
             <p class="alert alert-info">No hay facturas disponibles.</p>
-        {% endif %}
-    </div>
+            {% endif %}
+        </div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    </body>
 </html>
-

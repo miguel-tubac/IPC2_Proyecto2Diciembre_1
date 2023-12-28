@@ -1,22 +1,5 @@
-<?xml version="1.0" ?>
 <Facturas>
     <factura correlativo="01">
-        <cliente nit="1313">
-            <nombre>Nery</nombre>
-            <direccion>Guatemala</direccion>
-        </cliente>
-        <fecha>2023-12-27</fecha>
-        <producto id="02">
-            <nombre>Camo</nombre>
-            <descripcion>Larmborgini</descripcion>
-            <cantidad>5</cantidad>
-            <stock>22</stock>
-            <preciounitario>1200000</preciounitario>
-            <total>6000000.00</total>
-        </producto>
-        <totalfactura>6000000.00</totalfactura>
-    </factura>
-    <factura correlativo="02">
         <cliente nit="33122">
             <nombre>Adlers</nombre>
             <direccion>Chimaltenango</direccion>
@@ -25,43 +8,19 @@
         <producto id="02">
             <nombre>Camo</nombre>
             <descripcion>Larmborgini</descripcion>
-            <cantidad>1</cantidad>
+            <cantidad>4</cantidad>
             <stock>22</stock>
             <preciounitario>1200000</preciounitario>
-            <total>1200000.00</total>
+            <total>4800000.0</total>
         </producto>
-        <totalfactura>1200000.00</totalfactura>
-    </factura>
-    <factura correlativo="03">
-        <cliente nit="1313">
-            <nombre>Nery</nombre>
-            <direccion>Guatemala</direccion>
-        </cliente>
-        <fecha>2023-12-27</fecha>
-        <producto id="02">
-            <nombre>Camo</nombre>
-            <descripcion>Larmborgini</descripcion>
-            <cantidad>1</cantidad>
-            <stock>22</stock>
-            <preciounitario>1200000</preciounitario>
-            <total>1200000.00</total>
-        </producto>
-        <totalfactura>1200000.00</totalfactura>
-    </factura>
-    <factura correlativo="04">
-        <cliente nit="1313">
-            <nombre>Nery</nombre>
-            <direccion>Guatemala</direccion>
-        </cliente>
-        <fecha>2023-12-28</fecha>
-        <producto id="02">
-            <nombre>Camo</nombre>
-            <descripcion>Larmborgini</descripcion>
+        <producto id="1698">
+            <nombre>Moto</nombre>
+            <descripcion>Honda</descripcion>
             <cantidad>5</cantidad>
-            <stock>22</stock>
-            <preciounitario>1200000</preciounitario>
-            <total>6000000.00</total>
+            <stock>29</stock>
+            <preciounitario>9500</preciounitario>
+            <total>47500.0</total>
         </producto>
-        <totalfactura>6000000.00</totalfactura>
+        <totalfactura>4847500.0</totalfactura>
     </factura>
 </Facturas>
