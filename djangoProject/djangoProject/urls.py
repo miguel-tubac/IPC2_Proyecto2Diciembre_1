@@ -16,13 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from app.PuntoDeVenta.views import incio, clientes, clientes_crear, clientes_eliminar, clientes_listar, clientes_editar, editar_cliente, guardar_cambios_cliente
+from app.PuntoDeVenta.views import inicio, clientes, clientes_crear, clientes_eliminar, clientes_listar, clientes_editar, editar_cliente, guardar_cambios_cliente
 from app.Producto.views import productos, productos_crear, productos_eliminar, productos_listar, productos_editar, editar_producto, guardar_cambios_producto
-from app.Factura.views import facturas, facturas_crear, procesar_pedido, eliminar_factura, listar_facturas, facturas_editar, editar_factura, guardar_cambios_factura
+from app.Factura.views import facturas, facturas_crear, procesar_pedido, eliminar_factura, listar_facturas, facturas_editar, editar_factura, guardar_cambios_factura, obtener_xml_clientes, obtener_xml_productos
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', incio, name='inicio'),
+    path('', inicio, name='inicio'),
     path('clientes/', clientes, name='clientes'),
     path('clientes/crear/', clientes_crear, name='clientes_crear'),
     path('clientes/elimnar/', clientes_eliminar, name='clientes_eliminar'),
@@ -43,7 +43,7 @@ urlpatterns = [
          guardar_cambios_producto, name='guardar_cambios_producto'),
     path('facturas/', facturas, name='facturas'),
     path('facturas/crear', facturas_crear, name='facturas_crear'),
-    path('procesar_pedido/', procesar_pedido, name='procesar_pedido'),
+    path('facturas/procesar_pedido/', procesar_pedido, name='procesar_pedido'),
     path('facturas/eliminar/', eliminar_factura, name='eliminar_factura'),
     path('facturas/listar/', listar_facturas, name='listar_facturas'),
     path('facturas/editar/', facturas_editar, name='editar_facturas'),
@@ -51,4 +51,8 @@ urlpatterns = [
          editar_factura, name='editar_factura'),
     path('guardar_cambios_factura/<str:correlativo>/',
          guardar_cambios_factura, name='guardar_cambios_factura'),
+    path('obtener-xml-clientes/', obtener_xml_clientes,
+         name='obtener_xml_clientes'),
+    path('obtener-xml-productos/', obtener_xml_productos,
+         name='obtener_xml_productos'),
 ]

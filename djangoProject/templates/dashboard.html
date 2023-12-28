@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Dashboard</title>
+        <!-- Agrega los enlaces a Bootstrap CSS y cualquier otro estilo personalizado aquí -->
+        <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        />
+        <style>
+            /* Estilo adicional personalizado si es necesario */
+            .container {
+                padding: 20px;
+            }
+            .table-clientes {
+                background-color: #e6f7ff; /* Color de fondo para la tabla de clientes */
+            }
+            .table-productos {
+                background-color: #f0e68c; /* Color de fondo para la tabla de productos */
+            }
+        </style>
+    </head>
+    <body>
+        {% include 'navegacion_template.html' %}
+        <div class="container">
+            <h2 class="mt-4 mb-4">Dashboard</h2>
+
+            <!-- Tabla de Top Clientes -->
+            <h4 class="mt-4 mb-2">Top 5 Clientes</h4>
+            <table class="table table-striped table-bordered table-clientes">
+                <thead>
+                    <tr>
+                        <th>NIT Cliente</th>
+                        <th>Total Compras</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for nit, total_compras in top_clientes.items %}
+                    <tr>
+                        <td>{{ nit }}</td>
+                        <td>{{ total_compras|floatformat:2 }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <!-- Tabla de Top Productos -->
+            <h4 class="mt-4 mb-2">Top 5 Productos</h4>
+            <table class="table table-striped table-bordered table-productos">
+                <thead>
+                    <tr>
+                        <th>ID Producto</th>
+                        <th>Cantidad Vendida</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {%for producto_id, cantidad_vendida in top_productos.items%}
+                    <tr>
+                        <td>{{ producto_id }}</td>
+                        <td>{{ cantidad_vendida }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Agrega los enlaces a Bootstrap JS y cualquier otro script personalizado aquí -->
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    </body>
+</html>

@@ -1,3 +1,4 @@
+<?xml version="1.0" ?>
 <Clientes>
     <cliente nit="33122">
         <nombre>Adlers</nombre>
@@ -6,5 +7,41 @@
     <cliente nit="1313">
         <nombre>Nery</nombre>
         <direccion>Guatemala</direccion>
+    </cliente>
+    <cliente nit="1212">
+        <nombre>Jose</nombre>
+        <direccion>Guate</direccion>
+    </cliente>
+    <cliente nit="1515">
+        <nombre>Alejandro</nombre>
+        <direccion>Villanueva</direccion>
+    </cliente>
+    <cliente nit="2121">
+        <nombre>Maria</nombre>
+        <direccion>Quetzaltenango</direccion>
+    </cliente>
+    <cliente nit="3434">
+        <nombre>Carlos</nombre>
+        <direccion>Escuintla</direccion>
+    </cliente>
+    <cliente nit="4545">
+        <nombre>Isabel</nombre>
+        <direccion>Peten</direccion>
+    </cliente>
+    <cliente nit="5656">
+        <nombre>Ricardo</nombre>
+        <direccion>Sacatepequez</direccion>
+    </cliente>
+    <cliente nit="6767">
+        <nombre>Beatriz</nombre>
+        <direccion>Izabal</direccion>
+    </cliente>
+    <cliente nit="7878">
+        <nombre>Juan</nombre>
+        <direccion>Huehuetenango</direccion>
+    </cliente>
+    <cliente nit="8989">
+        <nombre>Laura</nombre>
+        <direccion>Jalapa</direccion>
     </cliente>
 </Clientes>

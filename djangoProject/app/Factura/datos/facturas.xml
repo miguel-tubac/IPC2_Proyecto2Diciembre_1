@@ -1,26 +1,106 @@
 <Facturas>
     <factura correlativo="01">
-        <cliente nit="33122">
-            <nombre>Adlers</nombre>
-            <direccion>Chimaltenango</direccion>
+        <cliente nit="1515">
+            <nombre>Alejandro</nombre>
+            <direccion>Villanueva</direccion>
         </cliente>
-        <fecha>2023-12-27</fecha>
-        <producto id="02">
-            <nombre>Camo</nombre>
-            <descripcion>Larmborgini</descripcion>
+        <fecha>2023-12-28</fecha>
+        <producto id="1698">
+            <nombre>Smart TV 4K</nombre>
+            <descripcion>Marca: Samsung, Tama&#195;&#177;o: 55 pulgadas, Resoluci&#195;&#179;n: 3840 x 2160</descripcion>
             <cantidad>4</cantidad>
+            <stock>7</stock>
+            <preciounitario>800</preciounitario>
+            <total>3200.0</total>
+        </producto>
+        <producto id="05">
+            <nombre>Smartphone Android</nombre>
+            <descripcion>Marca: Google Pixel 6, Pantalla: 6.4 pulgadas, C&#195;&#161;mara: 50MP, Almacenamiento: 128GB</descripcion>
+            <cantidad>3</cantidad>
+            <stock>24</stock>
+            <preciounitario>700</preciounitario>
+            <total>2100.0</total>
+        </producto>
+        <producto id="12">
+            <nombre>Monitor Curvo</nombre>
+            <descripcion>Marca: LG, Tama&#195;&#177;o: 34 pulgadas, Resoluci&#195;&#179;n: 3440 x 1440, Frecuencia de actualizaci&#195;&#179;n: 144Hz</descripcion>
+            <cantidad>1</cantidad>
+            <stock>35</stock>
+            <preciounitario>600</preciounitario>
+            <total>600.0</total>
+        </producto>
+        <totalfactura>5900.0</totalfactura>
+    </factura>
+    <factura correlativo="02">
+        <cliente nit="5656">
+            <nombre>Ricardo</nombre>
+            <direccion>Sacatepequez</direccion>
+        </cliente>
+        <fecha>2024-01-06</fecha>
+        <producto id="34">
+            <nombre>Router Wi-Fi 6</nombre>
+            <descripcion>Marca: ASUS, Velocidad: 3000Mbps, Cobertura: 2000 pies cuadrados</descripcion>
+            <cantidad>2</cantidad>
+            <stock>30</stock>
+            <preciounitario>120</preciounitario>
+            <total>240.00</total>
+        </producto>
+        <producto id="42">
+            <nombre>C&#225;mara de Seguridad IP</nombre>
+            <descripcion>Marca: Arlo, Resoluci&#243;n: 1080p, Visi&#243;n nocturna, Conexi&#243;n: Inal&#225;mbrica</descripcion>
+            <cantidad>5</cantidad>
+            <stock>14</stock>
+            <preciounitario>80</preciounitario>
+            <total>400.00</total>
+        </producto>
+        <producto id="98">
+            <nombre>Auriculares Inal&#225;mbricos</nombre>
+            <descripcion>Marca: Sony, Cancelaci&#243;n de ruido, Bater&#237;a de larga duraci&#243;n</descripcion>
+            <cantidad>4</cantidad>
+            <stock>25</stock>
+            <preciounitario>150</preciounitario>
+            <total>600.00</total>
+        </producto>
+        <producto id="88">
+            <nombre>Teclado Mec&#225;nico para Gaming</nombre>
+            <descripcion>Marca: Corsair, Interruptores Cherry MX, Retroiluminaci&#243;n RGB</descripcion>
+            <cantidad>1</cantidad>
             <stock>22</stock>
-            <preciounitario>1200000</preciounitario>
-            <total>4800000.0</total>
+            <preciounitario>100</preciounitario>
+            <total>100.00</total>
+        </producto>
+        <totalfactura>1340.0</totalfactura>
+    </factura>
+    <factura correlativo="03">
+        <cliente nit="8989">
+            <nombre>Laura</nombre>
+            <direccion>Jalapa</direccion>
+        </cliente>
+        <fecha>2023-12-19</fecha>
+        <producto id="75">
+            <nombre>Impresora Multifunci&#243;n</nombre>
+            <descripcion>Marca: HP, Funciones: Impresi&#243;n, Escaneo, Copia, Conexi&#243;n: Wi-Fi</descripcion>
+            <cantidad>2</cantidad>
+            <stock>18</stock>
+            <preciounitario>200</preciounitario>
+            <total>400.00</total>
+        </producto>
+        <producto id="01">
+            <nombre>Gaming PC</nombre>
+            <descripcion>Procesador: AMD Ryzen 9, GPU: NVIDIA RTX 3080, RAM: 32GB, Almacenamiento: 1TB SSD</descripcion>
+            <cantidad>1</cantidad>
+            <stock>8</stock>
+            <preciounitario>2500</preciounitario>
+            <total>2500.00</total>
         </producto>
         <producto id="1698">
-            <nombre>Moto</nombre>
-            <descripcion>Honda</descripcion>
-            <cantidad>5</cantidad>
-            <stock>29</stock>
-            <preciounitario>9500</preciounitario>
-            <total>47500.0</total>
+            <nombre>Smart TV 4K</nombre>
+            <descripcion>Marca: Samsung, Tama&#241;o: 55 pulgadas, Resoluci&#243;n: 3840 x 2160</descripcion>
+            <cantidad>4</cantidad>
+            <stock>13</stock>
+            <preciounitario>800</preciounitario>
+            <total>3200.00</total>
         </producto>
-        <totalfactura>4847500.0</totalfactura>
+        <totalfactura>6100.0</totalfactura>
     </factura>
 </Facturas>

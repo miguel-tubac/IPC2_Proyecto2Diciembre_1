@@ -5,16 +5,53 @@ import xml.etree.ElementTree as ET
 from django.http import HttpResponse
 from django.template import loader
 from django.conf import settings
+from collections import defaultdict
+
 from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
 
 
-def incio(request):
-    # cargamos el html en un template:
-    objetoTemplate = loader.get_template("menu_template.html")
-    html = objetoTemplate.render()
-    return HttpResponse(html)
+@csrf_exempt
+def inicio(request):
+    # Procesar el XML y obtener datos para las gráficas
+    archivo_xml_path = os.path.join(
+        settings.BASE_DIR, 'app', 'Factura', 'datos', 'facturas.xml')
+    top_clientes, top_productos = process_xml(archivo_xml_path)
+
+    # Renderizar el template con los datos de las gráficas
+    return render(request, 'dashboard.html', {'top_clientes': top_clientes, 'top_productos': top_productos})
+
+
+def process_xml(xml_path):
+    tree = ET.parse(xml_path)
+    root = tree.getroot()
+
+    # Diccionarios para almacenar datos de clientes y productos
+    clientes_data = defaultdict(float)
+    productos_data = defaultdict(int)
+
+    # Procesar facturas
+    for factura_element in root.findall('.//factura'):
+        nit_cliente = factura_element.find('.//cliente').get('nit')
+        total_factura = float(factura_element.find('totalfactura').text)
+
+        # Actualizar datos de clientes
+        clientes_data[nit_cliente] += total_factura
+
+        # Actualizar datos de productos
+        for producto_element in factura_element.findall('.//producto'):
+            producto_id = producto_element.get('id')
+            cantidad = int(producto_element.find('cantidad').text)
+            productos_data[producto_id] += cantidad
+    # Obtener los mejores clientes (top 5)
+    top_clientes = dict(sorted(clientes_data.items(),
+                        key=lambda item: item[1], reverse=True)[:5])
+
+    # Obtener los productos más vendidos (top 5)
+    top_productos = dict(sorted(productos_data.items(),
+                         key=lambda item: item[1], reverse=True)[:5])
+    return top_clientes, top_productos
 
 
 def clientes(request):

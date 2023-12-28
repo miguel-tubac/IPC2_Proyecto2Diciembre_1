@@ -175,6 +175,7 @@
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        ></script>
         <!-- Agrega tu script personalizado para manejar las funciones de búsqueda y procesar pedido -->
         <script>
             var datosTabla = {
@@ -184,226 +185,186 @@
                 fecha: '',
                 array: [], // Inicializa array como un arreglo vacío
             };
-            document
-                .getElementById('buscarCliente')
-                .addEventListener('click', function () {
-                    var nit_cliente =
-                        document.getElementById('codigoCliente').value;
+            document.getElementById('buscarCliente').addEventListener('click', function () {
+    var nit_cliente = document.getElementById('codigoCliente').value;
 
-                    const xmlFilePath = "{% static 'clientes.xml' %}";
-                    fetch(xmlFilePath)
-                        .then((response) => response.text())
-                        .then((xmlText) => {
-                            // Parsear el contenido XML
-                            const parser = new DOMParser();
-                            const xmlDoc = parser.parseFromString(
-                                xmlText,
-                                'application/xml'
-                            );
+    const xmlEndpoint = "/obtener-xml-clientes/";
 
-                            // Acceder al root del XML
-                            const root = xmlDoc.documentElement;
+    fetch(xmlEndpoint)
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error(`Error de red: ${response.status}`);
+            }
+            return response.text();
+        })
+        .then((xmlText) => {
+            const parser = new DOMParser();
+            const xmlDoc = parser.parseFromString(xmlText, 'application/xml');
 
-                            // Obtener la lista de clientes
-                            const clientes =
-                                root.getElementsByTagName('cliente');
+            const clientes = xmlDoc.getElementsByTagName('cliente');
 
-                            // Encontrar el cliente con el NIT proporcionado
-                            let clienteEncontrado = null;
-                            for (let i = 0; i < clientes.length; i++) {
-                                const cliente = clientes[i];
-                                const nitCliente = cliente.getAttribute('nit');
+            let clienteEncontrado = null;
+            for (let i = 0; i < clientes.length; i++) {
+                const cliente = clientes[i];
+                const nitCliente = cliente.getAttribute('nit');
 
-                                // Verificar si el NIT coincide
-                                if (nitCliente === nit_cliente) {
-                                    clienteEncontrado = cliente;
-                                    break; // Romper el bucle si se encuentra el cliente
-                                }
-                            }
+                if (nitCliente === nit_cliente) {
+                    clienteEncontrado = cliente;
+                    break;
+                }
+            }
 
-                            // Operar solo si se encontró el cliente
-                            if (clienteEncontrado) {
-                                const nombreCliente =
-                                    clienteEncontrado.querySelector(
-                                        'nombre'
-                                    ).textContent;
-                                const direccionCliente =
-                                    clienteEncontrado.querySelector(
-                                        'direccion'
-                                    ).textContent;
+            if (clienteEncontrado) {
+                const nombreCliente = clienteEncontrado.querySelector('nombre').textContent;
+                const direccionCliente = clienteEncontrado.querySelector('direccion').textContent;
 
-                                // Aquí puedes actualizar los campos del HTML con los valores obtenidos
-                                document.getElementById('nombreCliente').value =
-                                    nombreCliente;
-                                document.getElementById(
-                                    'direccionCliente'
-                                ).value = direccionCliente;
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Cliente Encontrado',
-                                    text: `Nombre: ${nombreCliente}\nDirección: ${direccionCliente}`,
-                                });
-                            } else {
-                                document.getElementById('nombreCliente').value =
-                                    '';
-                                document.getElementById(
-                                    'direccionCliente'
-                                ).value = '';
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Cliente No Encontrado',
-                                    text: `No se encontró un cliente con NIT: ${nit_cliente}`,
-                                });
-                            }
-                        })
-                        .catch((error) => {
-                            console.error(
-                                'Error al cargar el archivo XML:',
-                                error
-                            );
-                        });
+                document.getElementById('nombreCliente').value = nombreCliente;
+                document.getElementById('direccionCliente').value = direccionCliente;
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Cliente Encontrado',
+                    text: `Nombre: ${nombreCliente}\nDirección: ${direccionCliente}`,
                 });
-            document
-                .getElementById('agregarAlCarrito')
-                .addEventListener('click', function () {
-                    var id_producto =
-                        document.getElementById('idProducto').value;
-                    var nit_cliente =
-                        document.getElementById('codigoCliente').value;
-                    var nombre_cliente =
-                        document.getElementById('nombreCliente').value;
-                    var direccion_cliente =
-                        document.getElementById('direccionCliente').value;
-                    var fecha = document.getElementById('fecha').value;
-                    datosTabla['nit'] = nit_cliente;
-                    datosTabla['nombre'] = nombre_cliente;
-                    datosTabla['direccion'] = direccion_cliente;
-                    datosTabla['fecha'] = fecha;
-                    const xmlFilePathProducto = "{% static 'productos.xml' %}";
-                    fetch(xmlFilePathProducto)
-                        .then((response) => response.text())
-                        .then((xmlText) => {
-                            // Parsear el contenido XML
-                            const parser = new DOMParser();
-                            const xmlDoc = parser.parseFromString(
-                                xmlText,
-                                'application/xml'
-                            );
-
-                            // Acceder al root del XML
-                            const root = xmlDoc.documentElement;
-
-                            // Obtener la lista de productos
-                            const productos =
-                                root.getElementsByTagName('producto');
-
-                            // Encontrar el producto por el id
-                            let producto_encontrado = null;
-                            for (let i = 0; i < productos.length; i++) {
-                                const producto = productos[i];
-                                const idproducto = producto.getAttribute('id');
-
-                                // Verificar si el Id coincide
-                                if (idproducto === id_producto) {
-                                    producto_encontrado = producto;
-                                    break; // Romper el bucle si se encuentra el producto
-                                }
-                            }
-
-                            // Operar solo si se encontró el producto
-                            if (producto_encontrado) {
-                                const nombreproducto =
-                                    producto_encontrado.querySelector(
-                                        'nombre'
-                                    ).textContent;
-                                const descripcionproducto =
-                                    producto_encontrado.querySelector(
-                                        'descripcion'
-                                    ).textContent;
-                                const precioproducto =
-                                    producto_encontrado.querySelector(
-                                        'precio'
-                                    ).textContent;
-                                const stockproducto =
-                                    producto_encontrado.querySelector(
-                                        'stock'
-                                    ).textContent;
-                                const cantidad_producto =
-                                    document.getElementById(
-                                        'cantidadProducto'
-                                    ).value;
-                                // Agregar una nueva fila a la tabla con id 'tablaCarrito'
-                                const tablaCarrito =
-                                    document.getElementById('tablaCarrito');
-                                const nuevaFila = tablaCarrito.insertRow(-1); // -1 para agregar al final
-
-                                // Agregar celdas a la nueva fila
-                                const celdaId = nuevaFila.insertCell(0);
-                                const celdaNombre = nuevaFila.insertCell(1);
-                                const celdaDescripcion =
-                                    nuevaFila.insertCell(2);
-                                const celdaCantidad = nuevaFila.insertCell(3);
-                                const celdaStock = nuevaFila.insertCell(4);
-                                const celdaPrecio = nuevaFila.insertCell(5);
-                                const celdatotal = nuevaFila.insertCell(6);
-
-                                // Asignar valores a las celdas
-                                celdaId.textContent = id_producto;
-                                celdaNombre.textContent = nombreproducto;
-                                celdaDescripcion.textContent =
-                                    descripcionproducto;
-                                celdaCantidad.textContent = cantidad_producto;
-                                celdaPrecio.textContent = precioproducto;
-                                celdaStock.textContent = stockproducto;
-                                var total =
-                                    parseFloat(cantidad_producto) *
-                                    parseFloat(precioproducto);
-                                total = total.toFixed(2);
-                                nuevaFilatabla = [
-                                    id_producto,
-                                    nombreproducto,
-                                    descripcionproducto,
-                                    cantidad_producto,
-                                    stockproducto,
-                                    precioproducto,
-                                    total,
-                                ];
-                                datosTabla.array.push(nuevaFilatabla);
-                                var datosTablaString =
-                                    JSON.stringify(datosTabla);
-                                sessionStorage.setItem(
-                                    'datosTabla',
-                                    datosTablaString
-                                );
-                                celdatotal.textContent = total.toString();
-
-                                // Mostrar alerta de éxito con SweetAlert
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Producto Agregado al Carrito',
-                                    text: `Producto: ${nombreproducto}\nPrecio: ${precioproducto}`,
-                                });
-                                document.getElementById(
-                                    'cantidadProducto'
-                                ).value = '';
-                                document.getElementById('idProducto').value =
-                                    '';
-                            } else {
-                                // Manejar el caso en el que no se encontró el producto
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Producto No Encontrado',
-                                    text: `No se encontró un producto con ID: ${id_producto}`,
-                                });
-                            }
-                        })
-                        .catch((error) => {
-                            console.error(
-                                'Error al cargar el archivo XML:',
-                                error
-                            );
-                        });
+            } else {
+                document.getElementById('nombreCliente').value = '';
+                document.getElementById('direccionCliente').value = '';
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Cliente No Encontrado',
+                    text: `No se encontró un cliente con NIT: ${nit_cliente}`,
                 });
+            }
+        })
+        .catch((error) => {
+            console.error('Error al cargar el archivo XML:', error);
+        });
+});
+document.getElementById('agregarAlCarrito').addEventListener('click', function () {
+    var id_producto = document.getElementById('idProducto').value;
+    var nit_cliente = document.getElementById('codigoCliente').value;
+    var nombre_cliente = document.getElementById('nombreCliente').value;
+    var direccion_cliente = document.getElementById('direccionCliente').value;
+    var fecha = document.getElementById('fecha').value;
+
+    // Inicializa el array si no existe
+    datosTabla.array = datosTabla.array || [];
+
+    datosTabla['nit'] = nit_cliente;
+    datosTabla['nombre'] = nombre_cliente;
+    datosTabla['direccion'] = direccion_cliente;
+    datosTabla['fecha'] = fecha;
+
+    const xmlEndpoint = "/obtener-xml-productos/"; // Ruta relativa al archivo XML
+
+    fetch(xmlEndpoint)
+        .then((response) => response.text())
+        .then((xmlText) => {
+            console.log(xmlText);
+            // Parsear el contenido XML
+            const parser = new DOMParser();
+            const xmlDoc = parser.parseFromString(
+                xmlText,
+                'application/xml'
+            );
+
+            // Acceder al root del XML
+            const root = xmlDoc.documentElement;
+
+            // Obtener la lista de productos
+            const productos = root.getElementsByTagName('producto');
+
+            // Encontrar el producto por el id
+            let producto_encontrado = null;
+            for (let i = 0; i < productos.length; i++) {
+                const producto = productos[i];
+                const idproducto = producto.getAttribute('id');
+
+                // Verificar si el Id coincide
+                if (idproducto === id_producto) {
+                    producto_encontrado = producto;
+                    break; // Romper el bucle si se encuentra el producto
+                }
+            }
+
+            // Operar solo si se encontró el producto
+            if (producto_encontrado) {
+                const stockproducto = parseFloat(producto_encontrado.querySelector('stock').textContent);
+                const cantidad_producto = parseFloat(document.getElementById('cantidadProducto').value);
+
+                // Verificar si la cantidad es mayor al stock
+                if (cantidad_producto > stockproducto) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'La cantidad ingresada es mayor al stock disponible.',
+                    });
+                    document.getElementById('cantidadProducto').value = '';
+                    document.getElementById('idProducto').value = '';
+                    return; // Salir de la función si la cantidad es mayor al stock
+                }
+
+                const nombreproducto = producto_encontrado.querySelector('nombre').textContent;
+                const descripcionproducto = producto_encontrado.querySelector('descripcion').textContent;
+                const precioproducto = producto_encontrado.querySelector('precio').textContent;
+
+                // Agregar una nueva fila a la tabla con id 'tablaCarrito'
+                const tablaCarrito = document.getElementById('tablaCarrito');
+                const nuevaFila = tablaCarrito.insertRow(-1); // -1 para agregar al final
+
+                // Agregar celdas a la nueva fila
+                const celdaId = nuevaFila.insertCell(0);
+                const celdaNombre = nuevaFila.insertCell(1);
+                const celdaDescripcion = nuevaFila.insertCell(2);
+                const celdaCantidad = nuevaFila.insertCell(3);
+                const celdaStock = nuevaFila.insertCell(4);
+                const celdaPrecio = nuevaFila.insertCell(5);
+                const celdatotal = nuevaFila.insertCell(6);
+
+                // Asignar valores a las celdas
+                celdaId.textContent = id_producto;
+                celdaNombre.textContent = nombreproducto;
+                celdaDescripcion.textContent = descripcionproducto;
+                celdaCantidad.textContent = cantidad_producto;
+                celdaPrecio.textContent = precioproducto;
+                celdaStock.textContent = stockproducto - cantidad_producto; // Actualizar visualmente el stock en la tabla
+                var total = parseFloat(cantidad_producto) * parseFloat(precioproducto);
+                total = total.toFixed(2);
+                nuevaFilatabla = [
+                    id_producto,
+                    nombreproducto,
+                    descripcionproducto,
+                    cantidad_producto,
+                    stockproducto,
+                    precioproducto,
+                    total,
+                ];
+                datosTabla.array.push(nuevaFilatabla);
+                var datosTablaString = JSON.stringify(datosTabla);
+                sessionStorage.setItem('datosTabla', datosTablaString);
+                celdatotal.textContent = total.toString();
+
+                // Mostrar alerta de éxito con SweetAlert
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Producto Agregado al Carrito',
+                    text: `Producto: ${nombreproducto}\nPrecio: ${precioproducto}`,
+                });
+
+                document.getElementById('cantidadProducto').value = '';
+                document.getElementById('idProducto').value = '';
+            } else {
+                // Manejar el caso en el que no se encontró el producto
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Producto No Encontrado',
+                    text: `No se encontró un producto con ID: ${id_producto}`,
+                });
+            }
+        })
+        .catch((error) => {
+            console.error('Error al cargar el archivo XML:', error);
+        });
+});
             document
                 .getElementById('procesarPedido')
                 .addEventListener('click', function () {
@@ -412,7 +373,7 @@
                     var datosTablaRecuperados = JSON.parse(datosTablaString);
                     console.log(datosTablaRecuperados);
                     // Enviar los datos al backend mediante una solicitud Ajax
-                    fetch('/procesar_pedido/', {
+                    fetch('/facturas/procesar_pedido/', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',

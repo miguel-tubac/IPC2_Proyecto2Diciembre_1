@@ -8,6 +8,7 @@ from django.http import HttpResponse
 from django.template import loader
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib import messages
 
 # Create your views here.
 
@@ -17,6 +18,26 @@ def facturas(request):
     objetoTemplate = loader.get_template("facturas/menu_facturas.html")
     html = objetoTemplate.render()
     return HttpResponse(html)
+
+
+@csrf_exempt  # Necesario si estás haciendo una solicitud desde JavaScript
+def obtener_xml_clientes(request):
+    archivo_xml_path = os.path.join(
+        settings.BASE_DIR, 'app', 'PuntoDeVenta', 'datos', 'clientes.xml')
+    with open(archivo_xml_path, 'r') as file:
+        xml_content = file.read()
+
+    return HttpResponse(xml_content, content_type='application/xml')
+
+
+@csrf_exempt  # Necesario si estás haciendo una solicitud desde JavaScript
+def obtener_xml_productos(request):
+    archivo_xml_path = os.path.join(
+        settings.BASE_DIR, 'app', 'Producto', 'datos', 'productos.xml')
+    with open(archivo_xml_path, 'r') as file:
+        xml_content = file.read()
+
+    return HttpResponse(xml_content, content_type='application/xml')
 
 
 @csrf_exempt
@@ -62,18 +83,22 @@ def procesar_pedido(request):
         fecha = datos_tabla['fecha']
         array_productos = datos_tabla['array']
 
-        archivo_xml_path = os.path.join(
+        archivo_xml_path_facturas = os.path.join(
             settings.BASE_DIR, 'app', 'Factura', 'datos', 'facturas.xml')
 
+        archivo_xml_path_productos = os.path.join(
+            settings.BASE_DIR, 'app', 'Producto', 'datos', 'productos.xml')
+
         try:
-            tree = ET.parse(archivo_xml_path)
-            root = tree.getroot()
+            tree_facturas = ET.parse(archivo_xml_path_facturas)
+            root_facturas = tree_facturas.getroot()
         except FileNotFoundError:
-            root = ET.Element('Facturas')
-            tree = ET.ElementTree(root)
+            root_facturas = ET.Element('Facturas')
+            tree_facturas = ET.ElementTree(root_facturas)
 
         # Crear el elemento factura con correlativo
-        correlativo = str(len(root.findall('.//factura')) + 1).zfill(2)
+        correlativo = str(
+            len(root_facturas.findall('.//factura')) + 1).zfill(2)
         nueva_factura = ET.Element('factura', correlativo=correlativo)
 
         # Crear el elemento cliente
@@ -88,12 +113,32 @@ def procesar_pedido(request):
         # Crear elementos de productos
         total_factura = 0  # Variable para almacenar el total de la factura
         for producto_data in array_productos:
-            nuevo_producto = ET.Element('producto', id=producto_data[0])
+            producto_id = producto_data[0]
+            cantidad = str(producto_data[3])  # Convertir a cadena
+
+            # Restar la cantidad al stock del producto en productos.xml
+            try:
+                tree_productos = ET.parse(archivo_xml_path_productos)
+                root_productos = tree_productos.getroot()
+                producto_element = root_productos.find(
+                    f'.//producto[@id="{producto_id}"]')
+                stock_actual = int(producto_element.find('stock').text)
+                nuevo_stock = stock_actual - \
+                    int(cantidad)  # Convertir a entero
+                producto_element.find('stock').text = str(nuevo_stock)
+                # Guardar cambios en productos.xml
+                tree_productos.write(archivo_xml_path_productos)
+            except Exception as e:
+                print(
+                    f'Error al actualizar el stock del producto {producto_id}: {str(e)}')
+
+            nuevo_producto = ET.Element('producto', id=producto_id)
             ET.SubElement(nuevo_producto, 'nombre').text = producto_data[1]
             ET.SubElement(nuevo_producto,
                           'descripcion').text = producto_data[2]
-            ET.SubElement(nuevo_producto, 'cantidad').text = producto_data[3]
-            ET.SubElement(nuevo_producto, 'stock').text = producto_data[4]
+            # Usar la cadena
+            ET.SubElement(nuevo_producto, 'cantidad').text = cantidad
+            ET.SubElement(nuevo_producto, 'stock').text = str(producto_data[4])
             ET.SubElement(nuevo_producto,
                           'preciounitario').text = producto_data[5]
             ET.SubElement(nuevo_producto, 'total').text = producto_data[6]
@@ -105,14 +150,14 @@ def procesar_pedido(request):
         # Agregar la etiqueta totalfactura al final
         ET.SubElement(nueva_factura, 'totalfactura').text = str(total_factura)
 
-        root.append(nueva_factura)
+        root_facturas.append(nueva_factura)
 
         # Guardar el árbol XML de nuevo
-        tree = ET.ElementTree(root)
-        tree_str = ET.tostring(root, encoding='utf-8').decode('utf-8')
+        tree_facturas = ET.ElementTree(root_facturas)
+        tree_str = ET.tostring(root_facturas, encoding='utf-8').decode('utf-8')
         formatted_xml = minidom_parse_string(tree_str)
 
-        with open(archivo_xml_path, 'wb') as file:
+        with open(archivo_xml_path_facturas, 'wb') as file:
             file.write(formatted_xml.encode('utf-8'))
 
         context['success'] = True
@@ -327,12 +372,13 @@ def guardar_cambios_factura(request, correlativo):
         # Obtener los datos del formulario y guardar los cambios en el archivo XML
         nit_cliente = request.POST.get('nit_cliente')
         fecha = request.POST.get('fecha')
-        # total_factura = request.POST.get('totalfactura')
 
         archivo_xml_path_clientes = os.path.join(
             settings.BASE_DIR, 'app', 'PuntoDeVenta', 'datos', 'clientes.xml')
         archivo_xml_path_facturas = os.path.join(
             settings.BASE_DIR, 'app', 'Factura', 'datos', 'facturas.xml')
+        archivo_xml_path_productos = os.path.join(
+            settings.BASE_DIR, 'app', 'Producto', 'datos', 'productos.xml')
 
         tree_clientes = ET.parse(archivo_xml_path_clientes)
         root_clientes = tree_clientes.getroot()
@@ -348,9 +394,11 @@ def guardar_cambios_factura(request, correlativo):
             nombre_cliente = "Cliente no encontrado"
             direccion_cliente = "Dirección no encontrada"
 
-        # Actualizar la factura
+        # Actualizar la factura y el stock de productos
         tree_facturas = ET.parse(archivo_xml_path_facturas)
         root_facturas = tree_facturas.getroot()
+        tree_productos = ET.parse(archivo_xml_path_productos)
+        root_productos = tree_productos.getroot()
 
         # Buscar y actualizar el elemento con el correlativo especificado
         for factura_element in root_facturas.findall('.//factura'):
@@ -365,31 +413,66 @@ def guardar_cambios_factura(request, correlativo):
                 # Actualizar fecha
                 factura_element.find('fecha').text = fecha
 
-                # Actualizar productos
+                # Inicializar el total del stock de la factura
+                total_stock_factura = 0
+
+                # Actualizar productos y stock
                 for producto_element in factura_element.findall('.//producto'):
                     producto_id = producto_element.get('id')
                     nueva_cantidad = request.POST.get(
                         f'nueva_cantidad_{producto_id}')
-                    producto_element.find('cantidad').text = nueva_cantidad
+                    cantidad_actual = int(
+                        producto_element.find('cantidad').text)
+                    diferencia_cantidad = int(nueva_cantidad) - cantidad_actual
+                    producto_stock_element = root_productos.find(
+                        f'.//producto[@id="{producto_id}"]/stock')
 
-                    # Recalcular el total como la multiplicación de la cantidad por el precio unitario
-                    preciounitario = float(
-                        producto_element.find('preciounitario').text)
-                    total = float(nueva_cantidad) * preciounitario
-                    producto_element.find('total').text = str(total)
-                    total_factura += total
+                    # Verificar si la cantidad nueva es mayor o igual a la cantidad actual
+                    if producto_stock_element is not None:
+                        if diferencia_cantidad >= 0:
+                            # Restar la diferencia entre la nueva cantidad y la cantidad actual al stock
+                            nuevo_stock = int(
+                                producto_stock_element.text) - diferencia_cantidad
+                        else:
+                            # Sumar la diferencia entre la cantidad actual y la nueva cantidad al stock
+                            nuevo_stock = int(
+                                producto_stock_element.text) + abs(diferencia_cantidad)
+
+                        if nuevo_stock < 0:
+                            return JsonResponse({'success': False, 'message': f"No hay suficiente stock disponible para el producto con ID {producto_id}."})
+
+                        producto_stock_element.text = str(nuevo_stock)
+                        total_stock_factura += nuevo_stock
+
+                        # Actualizar la cantidad y el total de la factura
+                        producto_element.find(
+                            'cantidad').text = nueva_cantidad
+                        preciounitario = float(
+                            producto_element.find('preciounitario').text)
+                        total = float(nueva_cantidad) * preciounitario
+                        producto_element.find('total').text = str(total)
+                        producto_element.find('stock').text = str(
+                            total_stock_factura)
+
+                        total_factura += total
 
                 # Recalcular el total de la factura sumando los totales de todos los productos
-                factura_element.find('totalfactura').text = str(total_factura)
+                factura_element.find(
+                    'totalfactura').text = str(total_factura)
 
-        # Guardar los cambios en el archivo XML
-        try:
-            tree_facturas.write(archivo_xml_path_facturas)
-        except Exception as e:
-            print(f"Error al escribir en el archivo XML: {e}")
+                # Guardar los cambios en los archivos XML
+                try:
+                    tree_facturas.write(archivo_xml_path_facturas)
+                    tree_productos.write(archivo_xml_path_productos)
 
-    # Redirigir de nuevo a la página de listado de facturas
-    return redirect('listar_facturas')
+                    # Enviar una respuesta JSON de éxito
+                    return JsonResponse({'success': True, 'message': 'Factura actualizada correctamente.'})
+                except Exception as e:
+                    # Enviar una respuesta JSON de error en caso de problemas al escribir en los archivos XML
+                    return JsonResponse({'success': False, 'message': f"Error al escribir en el archivo XML: {e}"})
+
+    # Enviar una respuesta JSON de error si la solicitud no es POST o si la factura no se encuentra
+    return JsonResponse({'success': False, 'message': 'Error al procesar la solicitud.'})
 
 
 def obtener_lista_clientes():

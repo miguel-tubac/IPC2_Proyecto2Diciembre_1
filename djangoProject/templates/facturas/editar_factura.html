@@ -7,13 +7,14 @@
     <title>Editar Factura</title>
     <!-- Agrega los enlaces a Bootstrap CSS y cualquier otro estilo personalizado aquí -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     {% include 'facturas/menu_facturas.html' %}
     <div class="container mt-4">
         <h2 class="mb-4">Editar Factura</h2>
 
-        <form method="post" action="{% url 'guardar_cambios_factura' correlativo=factura.correlativo %}" class="mb-4 bg-info p-4"> <!-- Añade la clase bg-info y p-4 para el color celeste pálido y el espaciado -->
+        <form id="editarFacturaForm" class="mb-4 bg-info p-4">
             {% csrf_token %}
             <div class="form-group">
                 <label for="nit_cliente">NIT Cliente:</label>
@@ -52,7 +53,7 @@
                 </div>
             {% endfor %}
 
-            <button type="submit" class="btn btn-primary">
+            <button type="button" onclick="guardarCambiosFactura()" class="btn btn-primary">
                 Guardar Cambios
             </button>
         </form>
@@ -62,5 +63,45 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        function guardarCambiosFactura() {
+            // Envía el formulario con Fetch
+            fetch("{% url 'guardar_cambios_factura' correlativo=factura.correlativo %}", {
+                method: 'POST',
+                body: new FormData(document.getElementById('editarFacturaForm')),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Si la actualización fue exitosa, muestra un mensaje con SweetAlert
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Éxito',
+                        text: data.message,
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(() => {
+                        // Redirige a la página de listar_facturas
+                        window.location.href = "{% url 'listar_facturas' %}";
+                    });
+                } else {
+                    // Si hay un error, muestra un mensaje de error con SweetAlert
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: data.message,
+                    });
+                }
+            })
+            .catch(error => {
+                // Si hay un error en la solicitud, muestra un mensaje de error con SweetAlert
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Error al procesar la solicitud.',
+                });
+            });
+        }
+    </script>
 </body>
 </html>

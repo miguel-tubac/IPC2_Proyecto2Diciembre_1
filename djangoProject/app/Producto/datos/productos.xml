@@ -1,15 +1,62 @@
-<?xml version="1.0" ?>
 <Productos>
     <producto id="02">
-        <nombre>Camo</nombre>
-        <descripcion>Larmborgini</descripcion>
-        <precio>1200000</precio>
-        <stock>22</stock>
+        <nombre>Laptop Ultrabook</nombre>
+        <descripcion>Marca: Dell, Procesador: Intel Core i7, RAM: 16GB, Almacenamiento: 512GB SSD</descripcion>
+        <precio>1500</precio>
+        <stock>10</stock>
     </producto>
     <producto id="1698">
-        <nombre>Moto</nombre>
-        <descripcion>Honda</descripcion>
-        <precio>9500</precio>
-        <stock>29</stock>
+        <nombre>Smart TV 4K</nombre>
+        <descripcion>Marca: Samsung, Tama&#241;o: 55 pulgadas, Resoluci&#243;n: 3840 x 2160</descripcion>
+        <precio>800</precio>
+        <stock>7</stock>
+    </producto>
+    <producto id="01">
+        <nombre>Gaming PC</nombre>
+        <descripcion>Procesador: AMD Ryzen 9, GPU: NVIDIA RTX 3080, RAM: 32GB, Almacenamiento: 1TB SSD</descripcion>
+        <precio>2500</precio>
+        <stock>7</stock>
+    </producto>
+    <producto id="05">
+        <nombre>Smartphone Android</nombre>
+        <descripcion>Marca: Google Pixel 6, Pantalla: 6.4 pulgadas, C&#225;mara: 50MP, Almacenamiento: 128GB</descripcion>
+        <precio>700</precio>
+        <stock>17</stock>
+    </producto>
+    <producto id="12">
+        <nombre>Monitor Curvo</nombre>
+        <descripcion>Marca: LG, Tama&#241;o: 34 pulgadas, Resoluci&#243;n: 3440 x 1440, Frecuencia de actualizaci&#243;n: 144Hz</descripcion>
+        <precio>600</precio>
+        <stock>11</stock>
+    </producto>
+    <producto id="98">
+        <nombre>Auriculares Inal&#225;mbricos</nombre>
+        <descripcion>Marca: Sony, Cancelaci&#243;n de ruido, Bater&#237;a de larga duraci&#243;n</descripcion>
+        <precio>150</precio>
+        <stock>21</stock>
+    </producto>
+    <producto id="75">
+        <nombre>Impresora Multifunci&#243;n</nombre>
+        <descripcion>Marca: HP, Funciones: Impresi&#243;n, Escaneo, Copia, Conexi&#243;n: Wi-Fi</descripcion>
+        <precio>200</precio>
+        <stock>16</stock>
+    </producto>
+    <producto id="34">
+        <nombre>Router Wi-Fi 6</nombre>
+        <descripcion>Marca: ASUS, Velocidad: 3000Mbps, Cobertura: 2000 pies cuadrados</descripcion>
+        <precio>120</precio>
+        <stock>28</stock>
+    </producto>
+    <producto id="88">
+        <nombre>Teclado Mec&#225;nico para Gaming</nombre>
+        <descripcion>Marca: Corsair, Interruptores Cherry MX, Retroiluminaci&#243;n RGB</descripcion>
+        <precio>100</precio>
+        <stock>21</stock>
+    </producto>
+    <producto id="42">
+        <nombre>C&#225;mara de Seguridad IP</nombre>
+        <descripcion>Marca: Arlo, Resoluci&#243;n: 1080p, Visi&#243;n nocturna, Conexi&#243;n: Inal&#225;mbrica</descripcion>
+        <precio>80</precio>
+        <stock>9</stock>
     </producto>
 </Productos>
