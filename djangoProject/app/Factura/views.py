@@ -166,3 +166,69 @@ def eliminar_factura(request):
             context['message'] = 'Factura no encontrada'
 
     return render(request, template_name, context)
+
+@csrf_exempt
+def listar_facturas(request):
+    # Cargar la plantilla
+    template = loader.get_template("facturas/menu_facturas_listar.html")
+
+    # Listas para almacenar datos de facturas y productos
+    lst_facturas = []
+
+    archivo_facturas_path = os.path.join(
+        settings.BASE_DIR, 'app', 'Factura', 'datos', 'facturas.xml')
+
+    try:
+        # Cargar datos de facturas
+        tree_facturas = ET.parse(archivo_facturas_path)
+        root_facturas = tree_facturas.getroot()
+        
+        for factura in root_facturas.findall("factura"):
+            # Extraer datos relevantes de la factura
+            numero = factura.get("correlativo")
+            fecha = factura.find("fecha").text
+            cliente_nit = factura.find("cliente").get("nit")
+            cliente_nombre = factura.find("cliente/nombre").text
+            cliente_direccion = factura.find("cliente/direccion").text
+            total_factura = factura.find("totalfactura").text
+
+            # Extraer datos de productos dentro de la factura
+            lst_productos = []
+            for producto in factura.findall("producto"):
+                producto_id = producto.get("id")
+                producto_nombre = producto.find("nombre").text
+                producto_descripcion = producto.find("descripcion").text
+                producto_cantidad = producto.find("cantidad").text
+                producto_stock = producto.find("stock").text
+                producto_precio_unitario = producto.find("preciounitario").text
+                producto_total = producto.find("total").text
+                producto_data = {
+                    "id": producto_id,
+                    "nombre": producto_nombre,
+                    "descripcion": producto_descripcion,
+                    "cantidad": producto_cantidad,
+                    "stock": producto_stock,
+                    "precio_unitario": producto_precio_unitario,
+                    "total": producto_total
+                }
+                lst_productos.append(producto_data)
+
+            # Crear un diccionario para la factura y agregar la lista de productos
+            factura_data = {
+                "numero": numero,
+                "fecha": fecha,
+                "cliente_nit": cliente_nit,
+                "cliente_nombre": cliente_nombre,
+                "cliente_direccion": cliente_direccion,
+                "total_factura": total_factura,
+                "lst_productos": lst_productos  # Agregar la lista de productos a los datos de la factura
+            }
+            lst_facturas.append(factura_data)
+
+    except FileNotFoundError:
+        root_facturas = ET.Element('Facturas')
+        tree_facturas = ET.ElementTree(root_facturas)
+
+    # Renderizar la plantilla con los datos organizados
+    context = {'lst_facturas': lst_facturas}
+    return render(request, "facturas/menu_facturas_listar.html", context)
